@@ -37,7 +37,7 @@ NAN:
   type: Book
   title: NAN
   author: NAN
-```))
+```.text))
 ```
 
 More complete example with a full recap :
