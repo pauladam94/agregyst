@@ -32,12 +32,12 @@ Here a very basic example
 SIP:
   type : Book
   title: Introduction to the Theory of Computation
-  author: Michael Sipser
+  author: Sipser, Michael
 NAN:
   type: Book
   title: NAN
   author: NAN
-```))
+```.text))
 ```
 
 More complete example with a full recap :
