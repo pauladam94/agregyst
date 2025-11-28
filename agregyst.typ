@@ -44,7 +44,7 @@
   ))
   let inset = 0pt
   let outset = 4pt
-  
+
   let (width: titlew, height: titleh) = measure(title)
   titlew += 0.6em
   titleh += 0.3em
@@ -58,7 +58,7 @@
     width: 100%,
     c
   )
-  
+
   let dec = -0.5pt
   let offset = -0em
   let on-the-left = here().position().x.pt() <= a4h / 2
@@ -66,7 +66,7 @@
   #place(
     dy: if on-the-left {- titleh + titlew - outset + dec}
         else {-titleh -outset + dec},
-    dx: if on-the-left { 100% - titlew + outset + dec + offset } 
+    dx: if on-the-left { 100% - titlew + outset + dec + offset }
         else {-titlew - outset - dec},
     rotate(if on-the-left {90deg} else { -90deg }, box(
       stroke: stroke_width + color,
@@ -83,7 +83,7 @@
 
 ///// DEV
 #let dev(c) = color-box(c)
-#let warning(c) = color-box(c, 
+#let warning(c) = color-box(c,
   color: orange,
   title: emoji.warning
 )
@@ -102,7 +102,7 @@
       #c
   ])
   item-counter.step()
-  
+
   // item-in-dev.update(l => {
   //   if in_dev.get() { l.push(item-counter.get()) }
   //   l
@@ -110,7 +110,7 @@
 }
 
 #let color-from-string-cite(s) = {
-  if s == "NAN" { gray } 
+  if s == "NAN" { gray }
   else if s in colors-default {
     colors-default.at(s)
   } else {
@@ -181,7 +181,7 @@
     hanging-indent: 0em,
   )
   set footnote.entry(gap: 0.4em, clearance: 2pt, indent: 0pt)
-  
+
   let above = 0.6em // 1.4em // 0.7em
   let below = 0.7em // 1em // 0.7em
 
@@ -200,13 +200,13 @@
         else {name}).join(" ")
     }
     let all_citations = citations.get()
-    
+
     for i in range(cite-counter.get().at(0)) {
       let lab = label("cite_" + str(i) + "_" + global-counter.display())
-      
+
       let pos = locate(lab).position()
       let item = query(lab).at(0).value
-      
+
       if item == "NAN" { continue }
       if not item in done {
         if item in file {
@@ -233,7 +233,7 @@
       [#str(it.key)#if it.supplement != none [ #it.supplement]]
     ] }
     let lbl = label("cite_" + cite-counter.display() + "_" + global-counter.display())
-    
+
     if query(selector(lbl).before(here())).len() == 0 {
     // if query(selector(lbl)).len() == 0 {
     [
@@ -243,7 +243,7 @@
     ]
     }
   }
-  
+
   show heading.where(level: 1): c => [
     #block(below: below, above: above, text(0.8em, underline(c)))
     #label("heading_1_" + heading-1-counter.display() + "_"
@@ -261,14 +261,14 @@
       numbering("1.", depth)
     }
   })
-  
+
   show heading.where(level: 2): c => [
     #block(below: below, above: above,
       text(0.9em, heading-2-color, underline(c)))
     #label("heading_2_" + heading-2-counter.display() + "_" + global-counter.display())
     #heading-2-counter.step()
   ]
-  
+
   show heading.where(level: 3): c => [
     #block(below:below, above:above,
       text(0.9em, heading-3-color, underline(c)))
@@ -280,7 +280,7 @@
     #block(below:below, above:above,
       text(0.8em, heading-4-color, underline(it)))
   ]
-  
+
   // show heading.where(level: 4): it => {
   //   item(it.body)[][]
   // }
@@ -318,7 +318,7 @@
 #let short-item-type(item) = {
   // assert(type(item) == content, message: "Some error")
   if type(item) == content {
-    item 
+    item
   } else if item in short-item-dictionnary {
     short-item-dictionnary.at(item)
   } else { item }
@@ -421,13 +421,13 @@
         rect(
           xy(
             calc.rem(current_page, 2) * a4w / 2,
-            if current_page == p0 { y0 } 
+            if current_page == p0 { y0 }
             else { -calc.div-euclid(current_page, 2) * a4h },
           ),
           xy(
             (calc.rem(current_page, 2) + 1) * a4w / 2,
             if current_page == p1 and y1 != none { y1 }
-            else { -(calc.div-euclid(current_page, 2) + 1) * a4h } 
+            else { -(calc.div-euclid(current_page, 2) + 1) * a4h }
           ),
           fill: color-from-string-cite(name0).transparentize(80%),
           stroke: none
@@ -451,10 +451,10 @@
     )
     let (x, y) = (posx, posy) // citation pos
     res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-    
+
     return (real_page, posx, posy + dy, res, x, y)
   }
-  
+
   for i in range(0, heading-1-counter.get().at(0)) {
     let lab = label("heading_1_" + str(i) + "_" + global_id)
     let pos = locate(lab).position()
@@ -478,7 +478,7 @@
 
     let (x, y) = (posx, posy) // citation pos
     res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-    
+
     let (posx, posy, dx) = (posx + 10, posy + padding, a4w / 2 - 20)
     let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
     let dy = height_item * 1.04 / (length.em * ratio.pt())
@@ -496,7 +496,7 @@
     let item = without-refs(query(lab).at(0))
     todo.push(("heading_2", (pos, fst_page, item, i)))
   }
-  
+
   // HEADING 3
   let heading3(seen, seen_citation, pos, fst_page, item, cite_attach) = {
     let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
@@ -504,7 +504,7 @@
     let (posx, posy, dx) = (posx + 20, posy - 5, a4w / 2 - 30)
     let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
     let dy = height_item * 1.04 / (length.em * ratio.pt())
-    
+
     let res = content(
       xy(posx, posy), (rel: xy(dx, dy)),
       box(
@@ -514,7 +514,7 @@
 
     let (x, y) = (posx, posy) // citation pos
     res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-    
+
     return (real_page, posx, posy + dy + padding, res, x, y)
   }
   for i in range(0, heading-3-counter.get().at(0)) {
@@ -538,10 +538,10 @@
 
     let (x, y) = (posx, posy) // citation pos
     res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-    
+
     let (posx, posy, dx) = (posx + 50, posy - 5, a4w / 2 - 60)
     let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
-    
+
     let dy = height_item * 1.04 / (length.em * ratio.pt())
     res += content(xy(posx, posy), (rel: xy(dx, dy)),
       block(width : 100%, height: 100%,
@@ -590,7 +590,7 @@
   todo = todo.map(t => {
    if t.len() == 2 { (..t, none) } else { t }
   })
-  
+
   for (type_element, args, cite_attach) in todo {
     let typeset = (
       "heading_1" : heading1,
