@@ -9,26 +9,21 @@
 #let dev-counter = counter("dev")
 #let item-counter = counter("item")
 
-#let heading-1-counter = counter("heading_1")
-#let heading-2-counter = counter("heading_2")
-#let heading-3-counter = counter("heading_3")
-
 #let item-in-dev = state("item-in-dev")
 
 #let citations = state("citations")
 
 ///// COLORS
-#let heading-2-color = red.darken(10%)
-#let heading-3-color = green.darken(20%)
-#let heading-4-color = purple.darken(20%)
+#let heading-1-color = red.darken(10%)
+#let heading-2-color = green.darken(20%)
+#let heading-3-color = purple.darken(20%)
 #let item-color = blue
 #let dev-accent-color = purple // black // purple
 
 #let a4h = 595
 #let a4w = 842
 
-#let color-box(c, color: dev-accent-color, title: [DEV]) = context {
-  dev-counter.step()
+#let color-box(c, color: dev-accent-color, title: [DEV]) = dev-counter.step() + context {
   let stroke_width = 1pt
   let stroke_box = color + stroke_width
   let title = text(color, 10pt, align(center + horizon,
@@ -119,9 +114,6 @@
 ) = {
   global-counter.step()
   dev-counter.update(0)
-  heading-1-counter.update(0)
-  heading-2-counter.update(0)
-  heading-3-counter.update(0)
   cite-counter.update(0)
   item-counter.update(1)
   // in_dev.update(false)
@@ -225,48 +217,23 @@
     }
   }
 
-  show heading.where(level: 1): c => [
-    #block(below: below, above: above, text(0.8em, underline(c)))
-    #label("heading_1_" + heading-1-counter.display() + "_"
-    + global-counter.display())
-    #heading-1-counter.step()
-  ]
+  show title: set text(size: 0.65em)
+  show title: set block(above: above, below: below)
+  show title: underline
 
-  set heading(numbering: (..nums) => {
-    let (level, depth) = nums.pos().enumerate().last()
-    if level == 1 {
-      numbering("I.", depth)
-    } else if level == 2 {
-      numbering("A.", depth)
-    } else if level == 3 {
-      numbering("1.", depth)
-    }
-  })
+  show heading: set block(above: above, below: below)
+  show heading: underline
 
-  show heading.where(level: 2): c => [
-    #block(below: below, above: above,
-      text(0.9em, heading-2-color, underline(c)))
-    #label("heading_2_" + heading-2-counter.display() + "_" + global-counter.display())
-    #heading-2-counter.step()
-  ]
+  show heading.where(level: 1): set heading(numbering: n => numbering("I.", n))
+  show heading.where(level: 1): set text(size: 0.8em, fill: heading-1-color)
 
-  show heading.where(level: 3): c => [
-    #block(below:below, above:above,
-      text(0.9em, heading-3-color, underline(c)))
-    #label("heading_3_" + heading-3-counter.display() + "_" + global-counter.display())
-    #heading-3-counter.step()
-  ]
+  show heading.where(level: 2): set heading(numbering: (_, n) => numbering("A.", n))
+  show heading.where(level: 2): set text(size: 0.9em, fill: heading-2-color)
 
-  show heading.where(level: 4): it => [
-    #block(below:below, above:above,
-      text(0.8em, heading-4-color, underline(it)))
-  ]
+  show heading.where(level: 3): set heading(numbering: (_, _, n) => numbering("1.", n))
+  show heading.where(level: 3): set text(size: 0.8em, fill: heading-3-color)
 
-  // show heading.where(level: 4): it => {
-  //   item(it.body)[][]
-  // }
-
-
+  std.title()
   body
 }
 
@@ -332,20 +299,24 @@
 }
 
 #let recap(
-  show-heading-big-numeral: true
+  show-heading-big-numeral: true,
 ) = {
   pagebreak()
+
   set text(9pt, weight: "black")
   set par(leading: 3pt)
+
   let length = 0.034em
   let debug = 0pt
   let padding = -10
-  // let cites = () // TODO try this
-  box(width: 100%, height: 100%, align(center + horizon,
+
+  show: box.with(width: 100%, height: 100%)
+  set align(center + horizon)
+
   context canvas(length: length, {
     import draw : *
 
-    let xy(x, y) = { (x * 1.5, y * 1.04) }
+    let xy(x, y) = (x * 1.5, y * 1.04)
     let get_real_page(p, x) = {
       p * 2 + if x >= a4w / 2 {1} else {0}
     }
@@ -418,8 +389,7 @@
       }
     }
 
-    // HEADING 1
-    let heading1(seen, seen_citation, pos, fst_page, item, cite_attach) = {
+    let typeset-title(seen, seen_citation, pos, fst_page, item, cite_attach) = {
       let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
       let (posx, posy, dx) = (posx + 10, posy, a4w / 2 - 20)
       let height_item = -measure(box(width: dx * length * 1.5, item, stroke: debug)).height.pt()
@@ -436,15 +406,22 @@
       return (real_page, posx, posy + dy, res, x, y)
     }
 
-    for i in range(0, heading-1-counter.get().at(0)) {
-      let lab = label("heading_1_" + str(i) + "_" + global_id)
-      let pos = locate(lab).position()
-      let item = without-refs(query(lab).at(0))
-      todo.push(("heading_1",(pos, fst_page, item)))
+    for elt in query(std.title) {
+      let pos = elt.location().position()
+      let item = without-refs(elt)
+      todo.push(("title", (pos, fst_page, item)))
     }
 
-    // HEADING 2
-    let heading2(seen, seen_citation, pos, fst_page, item, i, cite_attach) = {
+    let simulate-heading(it) = {
+      set text(size: 1.2em, fill: heading-1-color) if it.level == 1
+      set text(fill: heading-2-color) if it.level == 2
+      show: underline
+      numbering(it.numbering, ..counter(heading).at(it.location()))
+      [ ]
+      without-refs(it.body)
+    }
+
+    let typeset-h1(seen, seen_citation, pos, fst_page, item, i, cite_attach) = {
       let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 10)
       let res
       if show-heading-big-numeral {
@@ -471,15 +448,12 @@
       return (real_page, posx, posy + dy + padding, res, x, y)
     }
 
-    for i in range(0, heading-2-counter.get().at(0)) {
-      let lab = label("heading_2_" + str(i) + "_" + global_id)
-      let pos = locate(lab).position()
-      let item = without-refs(query(lab).at(0))
-      todo.push(("heading_2", (pos, fst_page, item, i)))
+    for (i, elt) in query(heading.where(level: 1)).enumerate() {
+      let pos = elt.location().position()
+      todo.push(("h1", (pos, fst_page, simulate-heading(elt), i)))
     }
 
-    // HEADING 3
-    let heading3(seen, seen_citation, pos, fst_page, item, cite_attach) = {
+    let typeset-h2(seen, seen_citation, pos, fst_page, item, cite_attach) = {
       let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
 
       let (posx, posy, dx) = (posx + 20, posy - 5, a4w / 2 - 30)
@@ -498,12 +472,10 @@
 
       return (real_page, posx, posy + dy + padding, res, x, y)
     }
-    for i in range(0, heading-3-counter.get().at(0)) {
-      let name = "heading_3_" + str(i) + "_" + global_id
-      let lab = label(name)
-      let pos = locate(lab).position()
-      let item = without-refs(query(lab).at(0))
-      todo.push(("heading_3", (pos, fst_page, item)))
+
+    for elt in query(heading.where(level: 2)) {
+      let pos = elt.location().position()
+      todo.push(("h2", (pos, fst_page, simulate-heading(elt))))
     }
 
     // ITEM
@@ -572,15 +544,19 @@
     }
 
     todo = todo.map(t => {
-    if t.len() == 2 { (..t, none) } else { t }
+      if t.len() == 2 {
+        (..t, none)
+      } else {
+        t
+      }
     })
 
     for (type_element, args, cite_attach) in todo {
       let typeset = (
-        "heading_1" : heading1,
-        "heading_2" : heading2,
-        "heading_3" : heading3,
-        "item" : item_f
+        title: typeset-title,
+        h1: typeset-h1,
+        h2: typeset-h2,
+        item: item_f,
       )
       let (
         real_page, posx, posy, res, cite_x, cite_y
@@ -594,8 +570,7 @@
       seen.push((real_page, posx, posy))
     }
     draw_cite_box(seen_citation, "NAN", (5, 0, -a4h * 3))
-  })))
-  // pagebreak()
+  })
 }
 
 // Graph

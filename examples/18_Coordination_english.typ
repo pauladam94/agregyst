@@ -1,5 +1,7 @@
 #import "../agregyst.typ" : tableau, dev, recap, item
 #import "@preview/cetz:0.3.1" : *
+
+#set document(title: [Management and Coordination of multiple execution thread @MOS])
 #show : tableau
 
 // CODLY
@@ -13,11 +15,10 @@
 
 #set text(lang: "eng")
 
-= Management and Coordination of multiple execution thread @MOS
 
-/ Goals: Understand how multithreading and multiprocess applications are build and how they work on top of the operating system. 
+/ Goals: Understand how multithreading and multiprocess applications are build and how they work on top of the operating system.
 
-== Process @MOS[2.1.1]
+= Process @MOS[2.1.1]
 #item("Definition")[A process][
   is an instance of an executing program, including the current values of the program counter, registers, and variables. It also has an address space an thread of execution associated to it.
 ]
@@ -59,7 +60,7 @@
   Processes can communicate with each other using the pipe operator, direct memory mapping, signals.
 ]
 
-== Thread @MOS[2.2.2]
+= Thread @MOS[2.2.2]
 #let thread_definition = item("Definition")[A thread][
   (also called light weight process) is a way to parallelized execution while keeping the same context and so the same address space.
 ]
@@ -106,7 +107,7 @@ stack(dir: ttb, spacing: 1em,
 ),
 stack(dir: ttb, spacing: 0.5em,
   user_kernel_image,
-  user_space_thread, 
+  user_space_thread,
 )
 )
 
@@ -116,8 +117,8 @@ stack(dir: ttb, spacing: 0.5em,
 ]
 ]
 
-== Synchronisation @MOS[2.4]
-=== Initial problem
+= Synchronisation @MOS[2.4]
+== Initial problem
 
 #item("Problem")[Race Condition.][
   When asking for the same ressource all of the means for communicating between threads and processus can produce race condition.
@@ -132,7 +133,7 @@ stack(dir: ttb, spacing: 0.5em,
 ```C
 int cpt = 0;
 void* incr(void*) {
-  for (int i = 0; i < 10 000; i++) cpt ++; 
+  for (int i = 0; i < 10 000; i++) cpt ++;
 }
 int main() { pthread_t thread0, thread1;
   pthread_create(&thread0, NULL, incr, NULL);
@@ -151,7 +152,7 @@ int main() { pthread_t thread0, thread1;
   is when not two thread are in critical section together.
 ]
 
-=== Algorithmic Solution
+== Algorithmic Solution
 
 #item("Algorithm")[Peterson Algorithm][
   achieve mutual exclusion.
@@ -179,7 +180,7 @@ void enter_region(int process) {
   this approach does not work. With modern hardware reodering of instruction made by the compiler and CPU can break this algorithm. Fences is the way to prevent but are much more complicated to use and hardware dependent.
 ]
 
-=== Hardware Solution @MOS[2.4.4]
+== Hardware Solution @MOS[2.4.4]
 
 #item("Definition")[Atomic operations][
   is any program code that indivisible in the sense that the CPU *must* execute it all in one go.
@@ -203,7 +204,7 @@ s0, s1 = sema(0), sema(0)
 ]
 
 #item("Remark")[Passive Waiting.][
-  _P_ can block the current thread. However this lock is passive, so the OS can schedule an other thread during that wait : no CPU is wasted. 
+  _P_ can block the current thread. However this lock is passive, so the OS can schedule an other thread during that wait : no CPU is wasted.
 ]
 
 #item("Application")[][
@@ -220,7 +221,7 @@ s0, s1 = sema(0), sema(0)
   ]
 ]
 
-=== DeadLocks
+== DeadLocks
 
 #item("Problem")[DeadLock.][
   If two thread are locking the same mutexes in different order, they could be waiting forever in some cases. It is named a *DeadLock*.
@@ -247,7 +248,7 @@ P(s0) // possibly blocked
   If all threads lock always in the same order the semaphores then deadlocks are impossible.
 ]
 
-=== Synchronization pattern
+== Synchronization pattern
 
 #dev[
 #item("Exemple")[@SEMA Philosophes Diner.][
@@ -306,7 +307,7 @@ event.process()
 
 #recap()
 
-===== Au programme
+==== Au programme
 
 - Prepa :
   - Notions de processus
