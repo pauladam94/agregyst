@@ -27,14 +27,6 @@
 #let a4h = 595
 #let a4w = 842
 
-// #let bowtie = symbol(
-//   "⋈",
-//   ("large", "⨝"),
-//   ("l", "⧑"),
-//   ("r", "⧒"),
-//   ("l.r", "⧓"),
-// )
-
 #let color-box(c, color: dev-accent-color, title: [DEV]) = context {
   dev-counter.step()
   let stroke_width = 1pt
@@ -126,11 +118,6 @@
   title: none,
   body
 ) = {
-  /*
-  import "@preview/layout-ltd:0.1.0": layout-limiter
-  show: layout-limiter.with(max-iterations: 5)
-  */
-
   global-counter.step()
   dev-counter.update(0)
   heading-1-counter.update(0)
@@ -144,11 +131,7 @@
   set document(title: title)
   set footnote.entry(gap: 0.1em, clearance: 0em, separator: none)
   set text(
-    // alternates: false,
-    // bottom-edge: 2em,
-    // stretch: 170%,
-    costs:(hyphenation: 100%, runt: 100%, widow: 100%, orphan: 100%),
-    // baseline: 0pt,
+    costs: (hyphenation: 100%, runt: 100%, widow: 100%, orphan: 100%),
     number-width: "proportional",
     fractions: true,
     14pt,
@@ -441,7 +424,7 @@
     let heading1(seen, seen_citation, pos, fst_page, item, cite_attach) = {
       let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
       let (posx, posy, dx) = (posx + 10, posy, a4w / 2 - 20)
-      let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
+      let height_item = -measure(box(width: dx * length * 1.5, item, stroke: debug)).height.pt()
       let dy = height_item * 1.04 / (length.em * ratio.pt())
       let res = content(
         xy(posx, posy),
@@ -569,13 +552,16 @@
     // Attach the citation to the right element
     for citation_attached_to_item in cites.map(
       ((cite_attach, (page:p0, x:x0, y:y0), fst_page)) => {
-      let l = todo.enumerate().filter(((i, (type, args))) => {
-        let (page, x, y) = args.at(0)
-        get_real_page(page, x.pt()) == get_real_page(p0, x0.pt())
-      }).sorted(key: ((i, (type, args))) => {
-      let (page, x, y) = args.at(0)
-      abs(y.pt() - y0.pt())
-      })
+      let l = todo
+        .enumerate()
+        .filter(((i, (type, args))) => {
+          let (page, x, y) = args.at(0)
+          get_real_page(page, x.pt()) == get_real_page(p0, x0.pt())
+        })
+        .sorted(key: ((i, (type, args))) => {
+          let (page, x, y) = args.at(0)
+          abs(y.pt() - y0.pt())
+        })
       if l.len() > 0 {
         let (i, (type_item, args)) = l.at(0)
         (i, (type_item, args, cite_attach))
