@@ -115,7 +115,6 @@
 #let tableau(
   margin: 12pt,
   nb-columns : 2,
-  title: none,
   body
 ) = {
   global-counter.step()
@@ -128,7 +127,6 @@
   // in_dev.update(false)
   item-in-dev.update(())
 
-  set document(title: title)
   set footnote.entry(gap: 0.1em, clearance: 0em, separator: none)
   set text(
     costs: (hyphenation: 100%, runt: 100%, widow: 100%, orphan: 100%),
