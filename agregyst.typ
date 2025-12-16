@@ -190,7 +190,7 @@
           let resume_authors = authors.map(a => resume_author(a)).join(" & ")
           [#h(0.8em) #text(fill:color-from-string-cite(item))[[#item]]#h(0.5em)#resume_authors, #emph(book.title). #linebreak()]
         } else {
-          assert(false, message:[#item not in #it.path.at(0)])
+          panic(item + " not in " + it.path.first())
         }
       }
       done.push(item)
@@ -617,7 +617,7 @@
           let resume_authors = authors.map(a => resume_author(a)).join(" & ")
           [#h(0.8em) #text(fill:color-from-string-cite(item))[[#item]]#h(0.5em)#resume_authors, #emph(book.title). #linebreak()]
         } else {
-          assert(false, message:[#item not in #it.path.at(0)])
+          panic(item + " not in " + it.path.first)
         }
       }
       done.push(item)
