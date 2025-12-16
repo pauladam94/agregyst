@@ -1,72 +1,85 @@
 ABI:
   type: Book
   title: "Foundations of Databases"
-  author: Serge Abiteboul, Richard Hull, Victor Vianu
+  author:
+    - Abiteboul, Serge
+    - Hull, Richard
+    - Vianu, Victor
 
 AZE:
   type: Book
   title: "Introduction au Machine Learning"
-  author: Chloé-Agathe Azencott
+  author: Azencott, Chloé-Agathe
 BAR:
     type: Book
     title: "Informatique MPI/MP2I"
-    author: Vincent Barra
+    author: Barra, Vincent
 BEAU:
   type: Book
   title: "Beautiful Code: Leading Programmers Explain How They Think"
-  author: Andy Oram, Greg Wilson
+  author:
+    - Oram, Andy
+    - Wilson, Greg
 CAR:
     type: Book
     title: "Langages formels: Calculabilité et complexité"
-    author: Olivier Carton, Galvin Greg Gagnees
+    author:
+      - Carton, Olivier
+      - Gagnees, Galvin Greg
 CERV:
   type: Book
   title: Penser en Algorithmes
-  author: Brian Christian, Tom Griffiths
+  author:
+    - Christian, Brian
+    - Griffiths, Tom
 CHA:
   type: Book
   title: "Software Testing : Principles and Practices"
-  author: Naresh Chauhan
+  author: Chauhan, Naresh
 COMPI:
   type: Book
   title: "Compilation : analyse lexicale et syntaxique"
-  author: François Schwarzentruber, Romain Legendre
+  author:
+    - Schwarzentruber, François
+    - Legendre, Romain
 COR2:
     type: Book
     title: "Introduction à l'algorithmique (2nd édition)"
-    author: Thomas H. Cormen
+    author: Cormen, Thomas H.
 COR3:
     type: Book
     title: "Introduction à l'algorithmique (3rd édition)"
-    author: Thomas H. Cormen
+    author: Cormen, Thomas H.
 CSAPP:
     type: Book
     title: "Computer Systems, A programmer's perspective"
-    author: "Randal E. Bryant, David R. O’Hallaron"
+    author:
+      - Bryant, Randal E.
+      - "O’Hallaron, David R."
 DESG:
   type: Book
   title: "Design patterns : catalogue de modèles de conception réutilisable"
   author:
-    - Erich Gamma
-    - Richard Helm
-    - Ralph Jonhson
-    - John Vlissides
+    - Gamma, Erich
+    - Helm, Richard
+    - Jonhson, Ralph
+    - Vlissides, John
 DRAG:
     type: Book
     title: "Compilateurs, Principes, techniques et outils"
     author:
-      - A. Aho
-      - M. Lam
-      - R. Sethi
-      - J. Ullman
+      - Aho, A.
+      - Lam, M.
+      - Sethi, R.
+      - Ullman, J.
 GRA:
   type: Book
   title: "Finite Model Theory and Its Applications"
-  author: Erich Grädel
+  author: Grädel, Erich
 KOR:
   type: Book
   title: "Unit Testing : Principles, Practices and Patterns"
-  author: Vladimir Khorikov
+  author: Khorikov, Vladimir
 MAN:
   type: Book
   title: "Man page"
@@ -74,11 +87,13 @@ MAN:
 MITCH:
   type: Book
   title: "Concepts in programming languages"
-  author: John C. Mitchell
+  author: Mitchell, John C.
 MITZ:
   type: Book
   title: "Probability and Computing"
-  author: Michael Mitzenmacher, Eli Upfal
+  author:
+    - Mitzenmacher, Michael
+    - Upfal, Eli
 MOS:
   type: Book
   title: Modern Operating System, 5th Edition
@@ -87,55 +102,66 @@ MPLI:
   type: Book
   title: "Mathématiques pour l’informatique Avec 309 exercices corrigés"
   author:
-    - André Arnold
-    - Irène Guessarian
+    - Arnold, André
+    - Guessarian, Irène
 NSIP:
     type: Book
     title: "Numériques et Sciences Informatiques 1er"
     author:
-        - Thibaut Balabonski
-        - Sylvain Conchon
-        - Jean-Christophe Filliâtre
-        - Kim Nguyen
+      - Balabonski, Thibaut
+      - Conchon, Sylvain
+      - Filliâtre, Jean-Christophe
+      - Nguyen, Kim
 NSIT:
     type: Book
     title: "Numériques et Sciences Informatiques Terminale"
     author:
-        - Thibaut Balabonski
-        - Sylvain Conchon
-        - Jean-Christophe Filliâtre
-        - Kim Nguyen
+      - Balabonski, Thibaut
+      - Conchon, Sylvain
+      - Filliâtre, Jean-Christophe
+      - Nguyen, Kim
 OCA:
     type: Book
     title: Apprendre à programmer avec Ocaml
-    author: Sylvain Conchon, Jean-Christophe Filliâtre
+    author:
+      - Conchon, Sylvain
+      - Filliâtre, Jean-Christophe
 PAPA:
   type: Book
   title: Algorithms
-  author: Sanjoy Dasgupta, Christos Papadimitriou, Umesh Vazirani
+  author:
+    - Dasgupta, Sanjoy
+    - Papadimitriou, Christos
+    - Vazirani, Umesh
 PAT:
     type: Book
     title: "Computer Organisation and Design, RISC-V Edition"
-    author: David A. Patterson, John L. Henessi
+    author:
+      - Patterson, David A.
+      - Henessi, John L.
 RWOCA:
   type: Book
   title: "Real World OCaml: Functional programming for the masses"
-  author: Yaron Minsky, Anil Madhavapeddy
+  author:
+    - Minsky, Yaron
+    - Madhavapeddy, Anil
 SIL:
   type: Book
   title: "Database System Concepts, 6th Edition"
-  author: Abraham Silberschatz
+  author: Silberschatz, Abraham
 SED:
     type: Book
     title: Algorithms (4th edition)
-    author: Robert Sedgewick, Keven Wayne
+    author:
+        - Sedgewick, Robert
+        - Wayne, Keven
 SCHWARZ:
   type: Book
   title: "Logique: Fondements et application"
   author:
-    - Pierre le Barbenchon
-    - Sophie Pinchinat
-    - François Schwarzentruber
+    - le Barbenchon, Pierre
+    - Pinchinat, Sophie
+    - Schwarzentruber, François
 TIGER:
   type: Book
   title: Modern compiler implementation
@@ -144,23 +170,25 @@ TOR:
     type: Book
     title: "MP2I MPI, Informatique Cours et exercices corrigés"
     author:
-        - Thibaut Balabonski
-        - Sylvain Conchon
-        - Jean-Christophe Filliâtre
-        - Kim Nguyen
-        - Laurent Sartre
+      - Balabonski, Thibaut
+      - Conchon, Sylvain
+      - Filliâtre, Jean-Christophe
+      - Nguyen, Kim
+      - Sartre, Laurent
 TPL:
   type: Book
   title: "Types and Programming Languages"
-  author: Benjamin Pierce
+  author: Pierce, Benjamin
 VACHE:
   type: Book
   title: "Database Management Systems 3rd edition"
-  author: Rahnu Ramakrishnan, Johannes Gehrke
+  author:
+    - Ramakrishnan, Rahnu
+    - Gehrke, Johannes
 VAH:
     type: Book
     title: "Digital Design"
-    author: Frank Vahid
+    author: Vahid, Frank
 VAZ:
   type: Book
   title: "Algorithmes d’approximation"
@@ -169,36 +197,41 @@ VERT:
     type: Book
     title: "Informatique MP2I-MPI"
     author:
-        - Florent Becker
-        - Olivier Bournez
-        - Jean-Loup Carré
-        - Mathieu Liedloff
-        - Julien Reichert
-        - Gérard Rozsavolgyi
+      - Becker, Florent
+      - Bournez, Olivier
+      - Carré, Jean-Loup
+      - Liedloff, Mathieu
+      - Reichert, Julien
+      - Rozsavolgyi, Gérard
 VIA:
     type: Thesis
     title: "Solutions parallèles efficaces sur le modèle CGM d’une classe de problèmes issus de la programmation dynamique"
-    author: Kengne Tchendji Vianney
+    author: Tchendji Vianney, Kengne
 HAI:
   type: Book
   title: "Bases de données et modèles de calcul: outils et méthode pour l'utilisateur"
-  author: Jean-Luc Hainaut
+  author: Hainaut, Jean-Luc
 BEN:
   type: Book
   title: "Bases de données et systèmes d'infomations : Modèles relationnen, SQL, optimisation des données"
-  author: Saïd Benaïchou
+  author: Benaïchou, Saïd
 GARD:
   type: Book
   title: Bases de données
-  author: Georges Gardarin
+  author: Gardarin, Georges
 DSC:
   type: Book
   title: Database System Concepts
-  author: Abraham Silberchatz, Henry F. Korth, S. Sudarshan
+  author:
+    - Silberchatz, Abraham
+    - Korth, Henry F.
+    - Sudarshan, S.
 KURO:
   type: Book
   title: Computer Networks, a top-down approach, 8th edition
-  author: James F. Kurose, Keith W. Ross
+  author:
+    - Kurose, James F.
+    - Ross, Keith W.
 PPREM:
   type: Book
   title: Programme de NSI en première
@@ -206,51 +239,69 @@ PPREM:
 RESO:
   type: Book
   title: Réseaux, 6° édition, en français
-  author: Andrew Tanenbaum, Nick Feamster, David J. Wetherall
+  author:
+    - Tanenbaum, Andrew
+    - Feamster, Nick
+    - Wetherall, David J.
 OSC:
   type: Book
   title: "Silberschatz's Operating System Concepts, Global Edition"
-  author: Abraham Silberschatz, Peter Baer Galvin, Greg Gagne
+  author:
+    - Silberschatz, Abraham
+    - Baer Galvin, Peter
+    - Gagne, Greg
 GC:
   type: Book
   title: "The Garbage Collection Hand Book: the art of automating memory management"
-  author: Richard Jones, Antony Hoskings, Eliot Moss
+  author:
+    - Jones, Richard
+    - Hoskings, Antony
+    - Moss, Eliot
 CRO:
   type: Book
   title: "Algorithmique du texte / Algorithms on strings"
-  author: Maxime Crochemore, Christophe Hancart, Thierry Lecroq
+  author:
+    - Crochemore, Maxime
+    - Hancart, Christophe
+    - Lecroq, Thierry
 GUS:
   type: Book
   title: "Algorithms for Strings, Trees, and Sequences"
-  author: Dan Gusfield
+  author: Gusfield, Dan
 SEMA:
   type: Book
   title: "Little Book of Semaphores"
-  author: Allen B. Downey
+  author: Downey, Allen B.
 OSTEP:
   type: Book
   title: "Operating Systems, three easy pieces"
-  author: Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau
+  author:
+    - Arpaci-Dusseau, Remzi H.
+    - Arpaci-Dusseau, Andrea C.
 LANG:
   type: Book
   title: Speech and Language Processing
-  author: Dan Jurafsky, James H. Martin
+  author:
+    - Jurafsky, Dan
+    - Martin, James H.
 RAY:
   type: Book
   title: "Concurrent Programming: Algorithms, Principles, and Foundations"
-  author: Michel Raynal
+  author: Raynal, Michel
 DORIT:
   type: Book
   title: "Approximation Algorithms for NP-Hard problems"
-  author: Dorit S. Hochbaum
+  author: Hochbaum, Dorit S.
 SEM:
   type: Book
   title: Semantic with Applications An Appetizer
-  author: Hanne Riis Nielson, Flemming Nielson
+  author:
+    - Riis Nielson, Hanne
+    - Nielson, Flemming
 SIP:
   type : Book
   title: Introduction to the Theory of Computation
-  author: Michael Sipser
+  author: Sipser, Michael
 NAN:
   type: Book
   title: NAN

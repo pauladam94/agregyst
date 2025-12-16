@@ -80,13 +80,24 @@
   )
 }
 
-#let color-from-string-cite(s) = {
-  if s == "NAN" { gray }
-  else if s in colors-default {
-    colors-default.at(s)
+#let citation-color(key) = {
+  if key == <NAN> {
+    gray
+  } else if str(key) in colors-default {
+    colors-default.at(str(key))
   } else {
-    color-from-string(s, h:80%, s:80%, v:100%)
+    color-from-string(str(key), h: 80%, s: 80%, v: 100%)
   }
+}
+
+#let format-citation(key, supplement: none) = {
+  set text(fill: citation-color(key))
+  [\[]
+  str(key)
+  if supplement != none {
+    [ #supplement]
+  }
+  [\]]
 }
 
 ///// TABLEAU
@@ -154,52 +165,80 @@
   let above = 0.6em // 1.4em // 0.7em
   let below = 0.7em // 1em // 0.7em
 
+  show bibliography: set heading(numbering: none)
   show bibliography: it => {
-    // if it.path.len() != 1 { assert(false, message: "Only accepts one bibliography file") }
-    // let file = yaml(it.path.at(0))
-    let file = yaml(it.sources.at(0))
-    // let file = yaml("../lecons/bib.yaml")
+    show heading: set text(fill: black)
+    show heading: underline
+
+    assert.eq(it.sources.len(), 1, message: "expected exactly one bibliography source")
+    if type(it.sources.first()) != bytes {
+      // We use `assert(false)` instead of `panic()` so that the error message
+      // is printed as a string instead of its repr being printed.
+      assert(
+        false,
+        message: "cannot read bibliography from file, try `bibliography(read(\"" + it.sources.first() + "\", encoding: none))`",
+      )
+    }
+    let file = yaml(it.sources.first())
+
+    heading(
+      numbering: none,
+      if it.title == auto {
+        [Bibliographie]
+      } else {
+        it.title
+      },
+    )
+
+    let short-author(author) = {
+      let parts = author.split(",").map(str.trim)
+      assert(parts.len() in (1, 2))
+      if parts.len() == 1 {
+        return parts.first()
+      }
+      let (last-name, first-name) = parts
+      [#first-name.clusters().first().~#last-name]
+    }
+
+    let display-entry(key) = {
+      let book = file.at(str(key))
+
+      let authors = book.author
+      if type(authors) == str {
+        authors = (authors,)
+      }
+
+      h(0.8em)
+      [ ]
+      format-citation(key)
+      sym.space.nobreak
+      authors.map(short-author).join(last: [ & ])[, ]
+      [, ]
+      text(style: "italic", book.title)
+      [.]
+      linebreak()
+    }
 
     let done = ()
-    text(underline[*Bibliographie* #linebreak()])
-    let resume_author(author) = {
-      let l = author.split(" ").filter(x=>x != "")
-      l.enumerate().map(((i, name)) =>
-        if i != l.len() - 1 [#name.slice(0,1).]
-        else {name}).join(" ")
+    for elt in query(cite) {
+      if elt.key != <NAN> and elt.key not in done {
+        display-entry(elt.key)
+        done.push(elt.key)
+      }
     }
 
-    for i in range(cite-counter.get().at(0)) {
-      let lab = label("cite_" + str(i) + "_" + global-counter.display())
-
-      let pos = locate(lab).position()
-      let item = query(lab).at(0).value
-
-      if item == "NAN" { continue }
-      if not item in done {
-        if item in file {
-          let book = file.at(item)
-          let a = book.author
-          let type_author = type(a)
-          let authors
-          if type(book.author) == array {
-            authors = book.author
-          } else if type(book.author) == str {
-            authors = book.author.split(",")
-          }
-          let resume_authors = authors.map(a => resume_author(a)).join(" & ")
-          [#h(0.8em) #text(fill:color-from-string-cite(item))[[#item]]#h(0.5em)#resume_authors, #emph(book.title). #linebreak()]
-        } else {
-          panic(item + " not in " + it.path.first())
+    if it.full {
+      for k in file.keys() {
+        let key = label(k)
+        if key != <NAN> and key not in done {
+          display-entry(key)
         }
       }
-      done.push(item)
     }
   }
+
   show cite : it => {
-    if str(it.key) != "NAN" { text(fill: color-from-string-cite(str(it.key)))[
-      [#str(it.key)#if it.supplement != none [ #it.supplement]]
-    ] }
+    format-citation(it.key, supplement: it.supplement)
     let lbl = label("cite_" + cite-counter.display() + "_" + global-counter.display())
 
     if query(selector(lbl).before(here())).len() == 0 {
@@ -291,8 +330,7 @@
   } else if it.func() == block {
     without-refs(it.body)
   } else if it.func() == ref {
-    let s = str(it.target)
-    text(color-from-string-cite(s))[\[#s#if "supplement" in it.fields() [ #it.supplement]\]]
+    format-citation(it.target, supplement: if "supplement" in it.fields() { it.supplement })
   } else {
     it
   }
@@ -361,7 +399,7 @@
 
     let draw_cite_box(seen_citation, cite_attach, (p1, x1, y1)) = {
       let (name0, p0, x0, y0) = if seen_citation.len() == 0 {
-        ("NAN", 0, 0, 0)
+        (<NAN>, 0, 0, 0)
       } else {
         seen_citation.at(seen_citation.len() - 1)
       }
@@ -380,7 +418,7 @@
               if current_page == p1 and y1 != none { y1 }
               else { -(calc.div-euclid(current_page, 2) + 1) * a4h }
             ),
-            fill: color-from-string-cite(name0).transparentize(80%),
+            fill: citation-color(name0).transparentize(80%),
             stroke: none
           )
           current_page += 1
@@ -415,8 +453,10 @@
       set text(size: 1.2em, fill: heading-1-color) if it.level == 1
       set text(fill: heading-2-color) if it.level == 2
       show: underline
-      numbering(it.numbering, ..counter(heading).at(it.location()))
-      [ ]
+      if it.numbering != none {
+        numbering(it.numbering, ..counter(heading).at(it.location()))
+        [ ]
+      }
       without-refs(it.body)
     }
 
@@ -447,7 +487,7 @@
       return (real_page, posx, posy + dy + padding, res, x, y)
     }
 
-    for (i, elt) in query(heading.where(level: 1)).enumerate() {
+    for (i, elt) in query(heading.where(level: 1).before(here())).enumerate() {
       let pos = elt.location().position()
       todo.push(("h1", (pos, fst_page, simulate-heading(elt), i)))
     }
@@ -472,7 +512,7 @@
       return (real_page, posx, posy + dy + padding, res, x, y)
     }
 
-    for elt in query(heading.where(level: 2)) {
+    for elt in query(heading.where(level: 2).before(here())) {
       let pos = elt.location().position()
       todo.push(("h2", (pos, fst_page, simulate-heading(elt))))
     }
@@ -595,35 +635,6 @@
       }
     }
 })
-
-#let bibliography-all() = context {
-  for global-counter in range(global-counter.get().at(0)) {
-    for i in range(cite-counter.get().at(0)) {
-      let lab = label("cite_" + str(i) + "_" + str(global-counter))
-      let pos = locate(lab).position()
-      let item = query(lab).at(0).value
-      if item == "NAN" { continue }
-      if not item in done {
-        if item in file {
-          let book = file.at(item)
-          let a = book.author
-          let type_author = type(a)
-          let authors
-          if type(book.author) == array {
-            authors = book.author
-          } else if type(book.author) == str {
-            authors = book.author.split(",")
-          }
-          let resume_authors = authors.map(a => resume_author(a)).join(" & ")
-          [#h(0.8em) #text(fill:color-from-string-cite(item))[[#item]]#h(0.5em)#resume_authors, #emph(book.title). #linebreak()]
-        } else {
-          panic(item + " not in " + it.path.first)
-        }
-      }
-      done.push(item)
-    }
-  }
-}
 
 #let authors(c) = {
   align(bottom + center, c)
