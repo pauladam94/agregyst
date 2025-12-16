@@ -4,14 +4,7 @@
 
 ///// COUNTER
 #let global-counter = counter("global")
-
 #let cite-counter = counter("cite")
-#let dev-counter = counter("dev")
-#let item-counter = counter("item")
-
-#let item-in-dev = state("item-in-dev")
-
-#let citations = state("citations")
 
 ///// COLORS
 #let heading-1-color = red.darken(10%)
@@ -23,7 +16,7 @@
 #let a4h = 595
 #let a4w = 842
 
-#let color-box(c, color: dev-accent-color, title: [DEV]) = dev-counter.step() + context {
+#let color-box(c, color: dev-accent-color, title: [DEV]) = context {
   let stroke_width = 1pt
   let stroke_box = color + stroke_width
   let title = text(color, 10pt, align(center + horizon,
@@ -106,10 +99,7 @@
   body
 ) = {
   global-counter.step()
-  dev-counter.update(0)
   cite-counter.update(0)
-  // in_dev.update(false)
-  item-in-dev.update(())
 
   set footnote.entry(gap: 0.1em, clearance: 0em, separator: none)
   set text(
@@ -178,7 +168,6 @@
         if i != l.len() - 1 [#name.slice(0,1).]
         else {name}).join(" ")
     }
-    let all_citations = citations.get()
 
     for i in range(cite-counter.get().at(0)) {
       let lab = label("cite_" + str(i) + "_" + global-counter.display())
