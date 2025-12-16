@@ -18,7 +18,7 @@
 #let heading-2-color = green.darken(20%)
 #let heading-3-color = purple.darken(20%)
 #let item-color = blue
-#let dev-accent-color = purple // black // purple
+#let dev-accent-color = purple
 
 #let a4h = 595
 #let a4w = 842
@@ -76,24 +76,15 @@
 )
 
 ///// ITEM
-#let item(type, name, c, show-title: true) = {
-  block(width: 100%, context [
-      // #let i = item-counter.display()
-      #metadata(type)
-      #label("item_type" + item-counter.display() + "_" + global-counter.display())
-      #metadata(name)
-      #label("item" + item-counter.display() + "_" + global-counter.display())
-      #underline[
-        *#text(item-color)[#type#h(0.3em)#item-counter.display()]*]
-      #if show-title { if name != [] [*#name*] }
-      #c
-  ])
-  item-counter.step()
-
-  // item-in-dev.update(l => {
-  //   if in_dev.get() { l.push(item-counter.get()) }
-  //   l
-  // })
+#let item(type, name, c) = {
+  figure(
+    placement: none,
+    caption: name,
+    kind: "agregyst:item",
+    supplement: type,
+    numbering: "1",
+    c,
+  )
 }
 
 #let color-from-string-cite(s) = {
@@ -107,6 +98,8 @@
 
 ///// TABLEAU
 
+#let bold-size = 0.85em
+
 #let tableau(
   margin: 12pt,
   nb-columns : 2,
@@ -115,7 +108,6 @@
   global-counter.step()
   dev-counter.update(0)
   cite-counter.update(0)
-  item-counter.update(1)
   // in_dev.update(false)
   item-in-dev.update(())
 
@@ -124,12 +116,12 @@
     costs: (hyphenation: 100%, runt: 100%, widow: 100%, orphan: 100%),
     number-width: "proportional",
     fractions: true,
-    14pt,
+    size: 14pt,
     lang: "fr",
     font: "New Computer Modern"
   )
   set list(tight: false,  body-indent: 0.4em, spacing: 0.5em, marker: ("‣", "•", "–"))
-  show strong: set text(0.85em)
+  show strong: set text(bold-size)
   show link: it => underline(stroke: black, it)
   show raw: set text(font: "New Computer Modern Mono")
   set page(
@@ -154,6 +146,20 @@
     hanging-indent: 0em,
   )
   set footnote.entry(gap: 0.4em, clearance: 2pt, indent: 0pt)
+
+  show figure.where(kind: "agregyst:item"): set align(start)
+  show figure.where(kind: "agregyst:item"): set block(breakable: true)
+  show figure.where(kind: "agregyst:item"): it => {
+    underline({
+      set text(fill: item-color, size: bold-size, weight: "bold")
+      it.caption.supplement
+      sym.space.nobreak
+      it.caption.counter.display()
+    })
+    [ ]
+    text(size: bold-size, weight: "bold", it.caption.body)
+    it.body
+  }
 
   let above = 0.6em // 1.4em // 0.7em
   let below = 0.7em // 1em // 0.7em
@@ -265,11 +271,16 @@
 )
 #let short-item-type(item) = {
   // assert(type(item) == content, message: "Some error")
-  if type(item) == content {
+  let text = if type(item) == content and item.func() == text {
+    item.text
+  } else if type(item) == str {
     item
-  } else if item in short-item-dictionnary {
-    short-item-dictionnary.at(item)
-  } else { item }
+  }
+  if text != none and text in short-item-dictionnary {
+    short-item-dictionnary.at(text)
+  } else {
+    item
+  }
 }
 
 #let without-refs(it) = {
@@ -329,8 +340,7 @@
     rect(xy(0, - a4h * 3), (rel: xy(a4w, a4h)))
     line(xy(a4w / 2, 0), xy(a4w / 2, - a4h * 3))
 
-    assert(item-counter.get().at(0) > 1, message: "Should have at least one item")
-    let fst_page = locate(label("item" + str(1) + "_" + global_id)).page()
+    let fst_page = 1 // TODO: Remove that.
     let todo = ()
     let seen = ()
     let seen_citation = ()
@@ -502,12 +512,11 @@
       )
       return (real_page, posx, min(posy + 5 - 35, posy + dy), res, x, y)
     }
-    for i in range(1, item-counter.get().at(0)) {
-      let lab = label("item_type" + str(i) + "_" + global_id)
-      let pos = locate(lab).position()
-      let item_type = query(lab).at(0).value
-      let item = without-refs(query(label("item" + str(i) + "_" + global_id)).at(0).value)
-      todo.push(("item", (pos, fst_page, item_type, item, i)))
+
+    for (i, elt) in query(figure.where(kind: "agregyst:item")).enumerate() {
+      let pos = elt.location().position()
+      let item = without-refs(elt.caption.body)
+      todo.push(("item", (pos, fst_page, elt.supplement, item, i)))
     }
 
     // Layout
