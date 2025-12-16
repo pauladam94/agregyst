@@ -1,5 +1,4 @@
 #import "../agregyst.typ" : tableau, dev, recap, item
-#import "@preview/cetz:0.3.1" : *
 
 #set document(title: [Management and Coordination of multiple execution thread @MOS])
 #show : tableau
