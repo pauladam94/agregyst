@@ -542,7 +542,7 @@
     for (i, elt) in query(figure.where(kind: "agregyst:item")).enumerate() {
       let pos = elt.location().position()
       let item = without-refs(elt.caption.body)
-      todo.push(("item", (pos, fst_page, elt.supplement, item, i)))
+      todo.push(("item", (pos, fst_page, elt.supplement, item, i + 1)))
     }
 
     // Layout
