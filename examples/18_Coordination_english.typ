@@ -12,7 +12,7 @@
 #codly(number-format: none,   )
 
 
-#set text(lang: "eng")
+#set text(lang: "en")
 
 
 / Goals: Understand how multithreading and multiprocess applications are build and how they work on top of the operating system.

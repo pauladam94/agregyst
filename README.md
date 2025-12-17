@@ -47,7 +47,7 @@ More complete example with a full recap :
 #import "@preview/cetz:0.3.4" : *
 #show : content => tableau(content, nb_columns : 2)
 
-#set text(lang: "eng")
+#set text(lang: "en")
 
 = Management and Coordination of multiple execution thread @MOS
 
