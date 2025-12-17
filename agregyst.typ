@@ -162,9 +162,6 @@
     it.body
   }
 
-  let above = 0.6em // 1.4em // 0.7em
-  let below = 0.7em // 1em // 0.7em
-
   show bibliography: set heading(numbering: none)
   show bibliography: it => {
     show heading: set text(fill: black)
@@ -252,19 +249,19 @@
   }
 
   show title: set text(size: 0.65em)
-  show title: set block(above: above, below: below)
+  show title: set block(spacing: 0.9em)
   show title: underline
 
-  show heading: set block(above: above, below: below)
+  show heading: set block(spacing: 0.7em)
   show heading: underline
 
   show heading.where(level: 1): set heading(numbering: n => numbering("I.", n))
-  show heading.where(level: 1): set text(size: 0.8em, fill: heading-1-color)
+  show heading.where(level: 1): set text(size: 0.77em, fill: heading-1-color)
 
-  show heading.where(level: 2): set heading(numbering: (_, n) => numbering("A.", n))
-  show heading.where(level: 2): set text(size: 0.9em, fill: heading-2-color)
+  show heading.where(level: 2): set heading(numbering: (.., n) => numbering("A.", n))
+  show heading.where(level: 2): set text(size: 0.75em, fill: heading-2-color)
 
-  show heading.where(level: 3): set heading(numbering: (_, _, n) => numbering("1.", n))
+  show heading.where(level: 3): set heading(numbering: (.., n) => numbering("1.", n))
   show heading.where(level: 3): set text(size: 0.8em, fill: heading-3-color)
 
   std.title()
@@ -450,8 +447,8 @@
     }
 
     let simulate-heading(it) = {
-      set text(size: 1.2em, fill: heading-1-color) if it.level == 1
-      set text(fill: heading-2-color) if it.level == 2
+      set text(size: 1.1em, fill: heading-1-color) if it.level == 1
+      set text(size: 0.9em, fill: heading-2-color) if it.level == 2
       show: underline
       if it.numbering != none {
         numbering(it.numbering, ..counter(heading).at(it.location()))
