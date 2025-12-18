@@ -112,20 +112,6 @@
   global-counter.step()
   cite-counter.update(0)
 
-  set footnote.entry(gap: 0.1em, clearance: 0em, separator: none)
-  set text(
-    costs: (hyphenation: 100%, runt: 100%, widow: 100%, orphan: 100%),
-    number-width: "proportional",
-    fractions: true,
-    size: 14pt,
-    lang: "fr",
-    font: "New Computer Modern"
-  )
-  show math.equation: set text(weight: "regular")
-  set list(tight: false,  body-indent: 0.4em, spacing: 0.5em, marker: ("‣", "•", "–"))
-  show strong: set text(bold-size)
-  show link: it => underline(stroke: black, it)
-  show raw: set text(font: "New Computer Modern Mono")
   set page(
     flipped: true,
     margin: margin,
@@ -140,14 +126,55 @@
       }
     }
   )
+
   set par(
-    justify: true,
-    linebreaks: "optimized",
     leading: 0.6em,
     spacing: 0.6em,
+    justify: true,
     hanging-indent: 0em,
   )
-  set footnote.entry(gap: 0.4em, clearance: 2pt, indent: 0pt)
+
+  set list(
+    tight: false,
+    body-indent: 0.4em,
+    spacing: 0.5em,
+  )
+
+  set text(
+    font: "New Computer Modern",
+    size: 14pt,
+    lang: "fr",
+    number-width: "proportional",
+  )
+  show math.equation: set text(weight: "regular")
+  show raw: set text(font: "New Computer Modern Mono")
+
+  show title: set text(size: 0.65em)
+  show title: set block(spacing: 0.9em)
+  show title: underline
+
+  show heading: set block(spacing: 0.7em)
+  show heading: underline
+
+  show heading.where(level: 1): set heading(numbering: n => numbering("I.", n))
+  show heading.where(level: 1): set text(size: 0.77em, fill: heading-1-color)
+
+  show heading.where(level: 2): set heading(numbering: (.., n) => numbering("A.", n))
+  show heading.where(level: 2): set text(size: 0.75em, fill: heading-2-color)
+
+  show heading.where(level: 3): set heading(numbering: (.., n) => numbering("1.", n))
+  show heading.where(level: 3): set text(size: 0.8em, fill: heading-3-color)
+
+  show strong: set text(bold-size)
+
+  show link: it => underline(stroke: black, it)
+
+  set footnote.entry(
+    separator: none,
+    clearance: 2pt,
+    gap: 0.4em,
+    indent: 0pt,
+  )
 
   show figure.where(kind: "agregyst:item"): set align(start)
   show figure.where(kind: "agregyst:item"): set block(breakable: true)
@@ -237,33 +264,14 @@
 
   show cite : it => {
     format-citation(it.key, supplement: it.supplement)
-    let lbl = label("cite_" + cite-counter.display() + "_" + global-counter.display())
 
-    if query(selector(lbl).before(here())).len() == 0 {
-    // if query(selector(lbl)).len() == 0 {
-    [
+    let lbl = label("cite_" + cite-counter.display() + "_" + global-counter.display())
+    if query(selector(lbl).before(here())).len() == 0 [
       #metadata(str(it.key))
       #lbl
       #cite-counter.step()
     ]
-    }
   }
-
-  show title: set text(size: 0.65em)
-  show title: set block(spacing: 0.9em)
-  show title: underline
-
-  show heading: set block(spacing: 0.7em)
-  show heading: underline
-
-  show heading.where(level: 1): set heading(numbering: n => numbering("I.", n))
-  show heading.where(level: 1): set text(size: 0.77em, fill: heading-1-color)
-
-  show heading.where(level: 2): set heading(numbering: (.., n) => numbering("A.", n))
-  show heading.where(level: 2): set text(size: 0.75em, fill: heading-2-color)
-
-  show heading.where(level: 3): set heading(numbering: (.., n) => numbering("1.", n))
-  show heading.where(level: 3): set text(size: 0.8em, fill: heading-3-color)
 
   std.title()
   body
