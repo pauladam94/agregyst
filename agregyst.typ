@@ -121,6 +121,7 @@
     lang: "fr",
     font: "New Computer Modern"
   )
+  show math.equation: set text(weight: "regular")
   set list(tight: false,  body-indent: 0.4em, spacing: 0.5em, marker: ("‣", "•", "–"))
   show strong: set text(bold-size)
   show link: it => underline(stroke: black, it)
