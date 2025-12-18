@@ -106,7 +106,6 @@
 
 #let tableau(
   margin: 12pt,
-  nb-columns : 2,
   body
 ) = {
   global-counter.step()
@@ -115,16 +114,8 @@
   set page(
     flipped: true,
     margin: margin,
-    columns: nb-columns,
-    background: {
-      for i in range(1, nb-columns) {
-        place(dx: i * 100% / nb-columns, dy: 0 * 40%,
-          rotate(90deg, origin: left + bottom,
-            line(length: 100%)
-          )
-        )
-      }
-    }
+    columns: 2,
+    background: line(length: 100%, angle: 90deg),
   )
 
   set par(
