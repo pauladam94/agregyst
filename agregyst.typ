@@ -104,16 +104,13 @@
 
 #let bold-size = 0.85em
 
-#let tableau(
-  margin: 12pt,
-  body
-) = {
+#let tableau(body) = {
   global-counter.step()
   cite-counter.update(0)
 
   set page(
     flipped: true,
-    margin: margin,
+    margin: 12pt,
     columns: 2,
     background: line(length: 100%, angle: 90deg),
   )

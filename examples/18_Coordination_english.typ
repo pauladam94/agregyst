@@ -15,6 +15,8 @@
 #set text(lang: "en")
 
 
+#title()
+
 / Goals: Understand how multithreading and multiprocess applications are build and how they work on top of the operating system.
 
 = Process @MOS[2.1.1]
