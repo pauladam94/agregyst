@@ -275,7 +275,7 @@
   "Méthode" : "Métho",
   "Implémentation" : "Implem",
   "Application" : "App",
-  "Remarque" : "Rem",
+  "Remarque" : "Rq",
   "Théorème" : "Thm",
   "Exemple" : "Ex",
   "Algorithme" : "Algo",
