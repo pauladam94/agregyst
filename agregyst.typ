@@ -1,10 +1,7 @@
-#import "@preview/cetz:0.4.1" : *
 #import calc: *
 #import "utils.typ": *
 
-///// COUNTER
-#let global-counter = counter("global")
-#let cite-counter = counter("cite")
+#let item-kind = "agregyst:item"
 
 ///// COLORS
 #let heading-1-color = red.darken(10%)
@@ -73,7 +70,7 @@
   figure(
     placement: none,
     caption: name,
-    kind: "agregyst:item",
+    kind: item-kind,
     supplement: type,
     numbering: "1",
     c,
@@ -105,9 +102,6 @@
 #let bold-size = 0.85em
 
 #let tableau(body) = {
-  global-counter.step()
-  cite-counter.update(0)
-
   set page(
     flipped: true,
     margin: 12pt,
@@ -164,9 +158,9 @@
     indent: 0pt,
   )
 
-  show figure.where(kind: "agregyst:item"): set align(start)
-  show figure.where(kind: "agregyst:item"): set block(breakable: true)
-  show figure.where(kind: "agregyst:item"): it => {
+  show figure.where(kind: item-kind): set align(start)
+  show figure.where(kind: item-kind): set block(breakable: true)
+  show figure.where(kind: item-kind): it => {
     underline({
       set text(fill: item-color, size: bold-size, weight: "bold")
       it.caption.supplement
@@ -250,58 +244,65 @@
     }
   }
 
-  show cite : it => {
-    format-citation(it.key, supplement: it.supplement)
+  show cite : it => format-citation(it.key, supplement: it.supplement)
 
-    let lbl = label("cite_" + cite-counter.display() + "_" + global-counter.display())
-    if query(selector(lbl).before(here())).len() == 0 [
-      #metadata(str(it.key))
-      #lbl
-      #cite-counter.step()
-    ]
-  }
-
-  std.title()
   body
 }
 
-#let short-item-dictionnary = (
-  "Définition" : "Def",
-  "Problème" : "Prob",
-  "Proposition" : "Prop",
-  "Propriété" : "Prop",
-  "Complexité" : "Complex",
-  "Notation" : "Not",
-  "Méthode" : "Métho",
-  "Implémentation" : "Implem",
-  "Application" : "App",
-  "Remarque" : "Rq",
-  "Théorème" : "Thm",
-  "Exemple" : "Ex",
-  "Algorithme" : "Algo",
-  "Pratique" : "Prat",
-  "Motivation" : "Motiv",
-
-  // ANGLAIS
-  "Definition" : "Def",
-  "Property" : "Prop",
-  "Remark": "Rem",
-  "Implementation": "Implem",
-  "Example": "Ex",
-  "Alorithm": "Algo",
-  "Theorem": "Thm",
-)
-#let short-item-type(item) = {
-  // assert(type(item) == content, message: "Some error")
-  let text = if type(item) == content and item.func() == text {
-    item.text
-  } else if type(item) == str {
-    item
+#let abbreviate(name) = {
+  let s = if type(name) == content and name.func() == text {
+    name.text
+  } else if type(name) == str {
+    name
   }
-  if text != none and text in short-item-dictionnary {
-    short-item-dictionnary.at(text)
+  if s == none {
+    return none
+  }
+  // Precomposed accented letters in regular expressions do not match their
+  // canonical decomposition, so we normalize to NFC first.
+  s = s.normalize()
+  // (?i) is for case insensivitity.
+  // ^ and $ are to match the entire string.
+  // Ideally this would be in a dictionary, but this doesn't work because we
+  // want to be case insensitive
+  if s.contains(regex("(?i)^d(é|e)f(inition)?$")) {
+    [Def]
+  } else if s.contains(regex("(?i)^prob(lème|lem)$")) {
+    [Prob]
+  } else if s.contains(regex("(?i)^prop(osition|riété|erty)$")) {
+    [Prop]
+  } else if s.contains(regex("(?i)^comp(lexité|lexity)$")) {
+    [Complex]
+  } else if s.contains(regex("(?i)^notation$")) {
+    [Not]
+  } else if s.contains(regex("(?i)^méthode$")) {
+    [Métho]
+  } else if s.contains(regex("(?i)^impl(é|e)mentation$")) {
+    [Implem]
+  } else if s.contains(regex("(?i)^application$")) {
+    [App]
+  } else if s.contains(regex("(?i)^remarque$")) {
+    [Rq]
+  } else if s.contains(regex("(?i)^remark$")) {
+    [Rem]
+  } else if s.contains(regex("(?i)^(théorème|theorem)$")) {
+    [Th]
+  } else if s.contains(regex("(?i)^(algorithme|algorithm)$")) {
+    [Algo]
+  } else if s.contains(regex("(?i)^exemple$")) {
+    [Ex]
+  } else if s.contains(regex("(?i)^exercice$")) {
+    [Exo]
+  } else if s.contains(regex("(?i)^example$")) {
+    [Eg]
+  } else if s.contains(regex("(?i)^exercice$")) {
+    [Ex]
+  } else if s.contains(regex("(?i)^motivation$")) {
+    [Motiv]
+  } else if s.contains(regex("(?i)^repr(é|e)sentation$")) {
+    [Repr]
   } else {
-    item
+    name
   }
 }
 
@@ -330,279 +331,240 @@
   }
 }
 
-#let recap(
-  show-heading-big-numeral: true,
-) = {
-  pagebreak()
+#let recap() = {
+  set text(size: 9pt, weight: "bold", hyphenate: true)
+  set par(leading: 0.3em, justify: false)
 
-  set text(9pt, weight: "black")
-  set par(leading: 3pt)
+  show: block.with(width: 100%, height: 100%, breakable: false)
 
-  let length = 0.034em
-  let debug = 0pt
-  let padding = -10
+  context {
+    let recaped = selector.or(
+      title,
+      heading.where(level: 1),
+      heading.where(level: 2),
+      figure.where(kind: item-kind),
+    )
 
-  show: box.with(width: 100%, height: 100%)
-  set align(center + horizon)
-
-  context canvas(length: length, {
-    import draw : *
-
-    let xy(x, y) = (x * 1.5, y * 1.04)
-    let get_real_page(p, x) = {
-      p * 2 + if x >= a4w / 2 {1} else {0}
+    let (page-width, page-height) = if page.flipped {
+      (page.height, page.width)
+    } else {
+      (page.width, page.height)
     }
 
-    let ratio = 1em.to-absolute()
-    let global_id = str(global-counter.get().at(0))
+    let page-count = 3
+    let column-per-page = page.columns
+    let column-width = (page-width - 2 * page.margin) / column-per-page
+    let column-height = page-height - 2 * page.margin
+    let column-count = page-count * column-per-page
 
-    rect(xy(0, - a4h * 1), (rel: xy(a4w, a4h)))
-    rect(xy(0, - a4h * 2), (rel: xy(a4w, a4h)))
-    rect(xy(0, - a4h * 3), (rel: xy(a4w, a4h)))
-    line(xy(a4w / 2, 0), xy(a4w / 2, - a4h * 3))
+    // Get the index of the column a location is in.
+    let column-index(pos) = {
+      let column-in-page = calc.floor((pos.x - page.margin) / column-width)
+      column-per-page * (pos.page - 1) + column-in-page
+    }
 
-    let fst_page = 1 // TODO: Remove that.
-    let todo = ()
-    let seen = ()
-    let seen_citation = ()
-
-    let cites = () // todo use this
-
-    let compute_pos(pos, fst_page, seen, offset) = {
-      let real_page = get_real_page((pos.page - fst_page), pos.x.pt())
-      // * 2 + if pos.x.pt() >= a4w / 2 {1} else {0}
-      let posx = if pos.x.pt() >= a4w / 2 {a4w / 2} else {0}
-      let posy = - pos.y.pt() - (pos.page - fst_page) * a4h
-      let f = ((page, x, y)) => (y < posy) and page == real_page
-      if seen.any(f) {
-        let (page, x, y) = seen.filter(f).sorted(key: ((page, x, y)) =>(page, y)).at(0)
-        posy = y - offset
+    // Build the list notable elements for each of the six columns.
+    let column-elements = ((),) * column-count
+    for it in query(recaped.before(here(), inclusive: false)) {
+      let pos = it.location().position()
+      if pos.page <= page-count {
+        column-elements.at(column-index(pos)).push(it)
       }
-      (real_page, posx, posy)
     }
 
-    // Citation
-    let citation_f(seen, pos, fst_page) = {}
-    for i in range(0, cite-counter.get().at(0)) {
-      let name = "cite_" + str(i) + "_" + global_id
-      let lab = label(name)
-      let pos = locate(lab).position()
-      let item = query(lab).at(0).value
-      cites.push((item, pos, fst_page))
-    }
+    // Elements to display, in visual order for each column.
+    let columns = column-elements
+      .map(column => column.sorted(key: it => it.location().position().y))
 
-    let draw_cite_box(seen_citation, cite_attach, (p1, x1, y1)) = {
-      let (name0, p0, x0, y0) = if seen_citation.len() == 0 {
-        (<NAN>, 0, 0, 0)
+    // Citation backgrounds to display, in visual order for each column.
+    let elements = columns.flatten()
+    let citations = query(selector(cite).before(here(), inclusive: false))
+    let citations-by-column = ((),) * column-count
+    let pending-citations = (none,) * column-count
+    for i in range(elements.len()) {
+      let current = elements.at(i)
+      let current-pos = current.location().position()
+      let current-column = column-index(current-pos)
+      let current-key = (current-column, current-pos.y)
+
+      let next = elements.at(i + 1, default: none)
+      let next-key = if next != none {
+        let next-pos = next.location().position()
+        (column-index(next-pos), next-pos.y)
       } else {
-        seen_citation.at(seen_citation.len() - 1)
+        (column-count, 0pt)
       }
-      let current_page = p0
-      if cite_attach != none {
-        // Does not always terminate
-        while (current_page != p1 + 1 and current_page < 7) {
-          rect(
-            xy(
-              calc.rem(current_page, 2) * a4w / 2,
-              if current_page == p0 { y0 }
-              else { -calc.div-euclid(current_page, 2) * a4h },
-            ),
-            xy(
-              (calc.rem(current_page, 2) + 1) * a4w / 2,
-              if current_page == p1 and y1 != none { y1 }
-              else { -(calc.div-euclid(current_page, 2) + 1) * a4h }
-            ),
-            fill: citation-color(name0).transparentize(80%),
-            stroke: none
-          )
-          current_page += 1
+
+      let citation = citations
+        .filter(c => {
+          let pos = c.location().position()
+          let key = (column-index(pos), pos.y)
+          current-key <= key and key < next-key
+        })
+        .first(default: none)
+
+      citations-by-column.at(current-column).push(citation)
+      if citation != none {
+        for j in range(current-column + 1, column-count) {
+          pending-citations.at(j) = citation
         }
       }
     }
 
-    let typeset-title(seen, seen_citation, pos, fst_page, item, cite_attach) = {
-      let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
-      let (posx, posy, dx) = (posx + 10, posy, a4w / 2 - 20)
-      let height_item = -measure(box(width: dx * length * 1.5, item, stroke: debug)).height.pt()
-      let dy = height_item * 1.04 / (length.em * ratio.pt())
-      let res = content(
-        xy(posx, posy),
-        (rel: xy(dx, dy)),
-        box(width: 100%, height: 100%, item, stroke:debug),
-        anchor: "north-west"
-      )
-      let (x, y) = (posx, posy) // citation pos
-      res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-
-      return (real_page, posx, posy + dy, res, x, y)
-    }
-
-    for elt in query(std.title) {
-      let pos = elt.location().position()
-      let item = without-refs(elt)
-      todo.push(("title", (pos, fst_page, item)))
-    }
-
-    let simulate-heading(it) = {
-      set text(size: 1.1em, fill: heading-1-color) if it.level == 1
-      set text(size: 0.9em, fill: heading-2-color) if it.level == 2
-      show: underline
-      if it.numbering != none {
-        numbering(it.numbering, ..counter(heading).at(it.location()))
-        [ ]
-      }
-      without-refs(it.body)
-    }
-
-    let typeset-h1(seen, seen_citation, pos, fst_page, item, i, cite_attach) = {
-      let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 10)
-      let res
-      if show-heading-big-numeral {
-        res += content(
-          xy(
-            a4w / 4  + a4w / 2 * rem(real_page, 2),
-            -a4h / 2  + - a4h * div-euclid(real_page, 2)
-          ),
-          text(140pt, gray.transparentize(70%), numbering("I", i + 1))
-        )
-      }
-
-      let (x, y) = (posx, posy) // citation pos
-      res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-
-      let (posx, posy, dx) = (posx + 10, posy + padding, a4w / 2 - 20)
-      let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
-      let dy = height_item * 1.04 / (length.em * ratio.pt())
-      res += content(
-        xy(posx, posy),
-        (rel: xy(dx, dy)),
-        box(width: 100%, height: 100%, item, stroke:debug),
-      )
-      return (real_page, posx, posy + dy + padding, res, x, y)
-    }
-
-    for (i, elt) in query(heading.where(level: 1).before(here())).enumerate() {
-      let pos = elt.location().position()
-      todo.push(("h1", (pos, fst_page, simulate-heading(elt), i)))
-    }
-
-    let typeset-h2(seen, seen_citation, pos, fst_page, item, cite_attach) = {
-      let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
-
-      let (posx, posy, dx) = (posx + 20, posy - 5, a4w / 2 - 30)
-      let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
-      let dy = height_item * 1.04 / (length.em * ratio.pt())
-
-      let res = content(
-        xy(posx, posy), (rel: xy(dx, dy)),
-        box(
-          width: 100%, height: 100%,
-          item, stroke:debug),
-      )
-
-      let (x, y) = (posx, posy) // citation pos
-      res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-
-      return (real_page, posx, posy + dy + padding, res, x, y)
-    }
-
-    for elt in query(heading.where(level: 2).before(here())) {
-      let pos = elt.location().position()
-      todo.push(("h2", (pos, fst_page, simulate-heading(elt))))
-    }
-
-    // ITEM
-    let item_f(seen, seen_citation, pos, fst_page, item_type, item, i, cite_attach) = {
-      let (real_page, posx, posy) = compute_pos(pos, fst_page, seen, 0)
-      item_type = short-item-type(item_type)
-      item = text(black, item_type) + [ ] + item
-      let res = content(
-        xy(posx, posy), (rel: xy(40, - 35)),
-        box(width: 100%, height: 100%, stroke: 1pt + black, outset: 0pt,
-          align(center + horizon, [#i]))
-      )
-
-      let (x, y) = (posx, posy) // citation pos
-      res += draw_cite_box(seen_citation, cite_attach, (real_page, posx, posy))
-
-      let (posx, posy, dx) = (posx + 50, posy - 5, a4w / 2 - 60)
-      let height_item = - measure(box(width: dx * length * 1.5, item, stroke:debug)).height.pt()
-
-      let dy = height_item * 1.04 / (length.em * ratio.pt())
-      res += content(xy(posx, posy), (rel: xy(dx, dy)),
-        block(width : 100%, height: 100%,
-          text(blue, item), stroke:debug),
-      )
-      return (real_page, posx, min(posy + 5 - 35, posy + dy), res, x, y)
-    }
-
-    for (i, elt) in query(figure.where(kind: "agregyst:item")).enumerate() {
-      let pos = elt.location().position()
-      let item = without-refs(elt.caption.body)
-      todo.push(("item", (pos, fst_page, elt.supplement, item, i + 1)))
-    }
-
-    // Layout
-    todo = todo.sorted(key:
-      e => {
-        let x = e.at(1).at(0).x.pt()
-        let y = e.at(1).at(0).y.pt()
-        let p = get_real_page(e.at(1).at(0).page, x)
-        (p, y)
-      })
-
-    // Attach the citation to the right element
-    for citation_attached_to_item in cites.map(
-      ((cite_attach, (page:p0, x:x0, y:y0), fst_page)) => {
-      let l = todo
-        .enumerate()
-        .filter(((i, (type, args))) => {
-          let (page, x, y) = args.at(0)
-          get_real_page(page, x.pt()) == get_real_page(p0, x0.pt())
-        })
-        .sorted(key: ((i, (type, args))) => {
-          let (page, x, y) = args.at(0)
-          abs(y.pt() - y0.pt())
-        })
-      if l.len() > 0 {
-        let (i, (type_item, args)) = l.at(0)
-        (i, (type_item, args, cite_attach))
-      }
-    }) {
-      if citation_attached_to_item != none {
-        let (i, (type_item, args, cite_attach)) = citation_attached_to_item
-        todo.at(i) = (type_item, args, cite_attach)
-      }
-    }
-
-    todo = todo.map(t => {
-      if t.len() == 2 {
-        (..t, none)
-      } else {
-        t
+    // The heading number to display, if any, for each column.
+    let background-numbers = columns.map(column => {
+      let hd = column
+        .filter(it => it.func() == heading and it.level == 1)
+        .first(default: none)
+      if hd != none {
+        let number = counter(heading).at(hd.location()).first()
+        numbering("I", number)
       }
     })
 
-    for (type_element, args, cite_attach) in todo {
-      let typeset = (
-        title: typeset-title,
-        h1: typeset-h1,
-        h2: typeset-h2,
-        item: item_f,
-      )
-      let (
-        real_page, posx, posy, res, cite_x, cite_y
-      ) = typeset.at(type_element)(
-          seen, seen_citation, ..args, cite_attach
-        )
-      res
-      if cite_attach != none {
-        seen_citation.push((cite_attach, real_page, cite_x, cite_y))
-      }
-      seen.push((real_page, posx, posy))
-    }
-    draw_cite_box(seen_citation, "NAN", (5, 0, -a4h * 3))
-  })
+    let margin = 4pt
+    let min-spacing = 5pt
+    grid(
+      columns: (1fr,) * column-per-page,
+      rows: (1fr,) * page-count,
+      inset: (x: margin),
+      stroke: 1pt,
+
+      ..columns
+        .zip(background-numbers, citations-by-column, pending-citations, exact: true)
+        .map(((column, background-number, citations, pending-citation)) => {
+          show: block.with(
+            width: 100%,
+            height: 100%,
+            outset: (x: margin),
+            clip: true,
+          )
+
+          // Background heading numerals.
+          if background-number != none {
+            show: place
+            show: block.with(width: 100%, height: 100%)
+            set align(center + horizon)
+            set text(size: 140pt, fill: gray.transparentize(70%))
+            background-number
+          }
+
+          // Generate miniature versions of titles, headings and items.
+          let miniatures = column
+            .map(it => (
+              it.location().position().y,
+              if it.func() == title {
+                show: block.with(inset: (bottom: 0.1em))
+                show: underline
+                set text(size: 1.1em)
+                if it.body == auto {
+                  document.title
+                } else {
+                  it.body
+                }
+              } else if it.func() == heading {
+                show: underline
+                set text(size: 1.1em, fill: heading-1-color) if it.level == 1
+                set text(size: 0.9em, fill: heading-2-color) if it.level == 2
+                if it.numbering != none {
+                  numbering(it.numbering, ..counter(heading).at(it.location()))
+                  [ ]
+                }
+                it.body
+              } else {
+                assert.eq(it.func(), figure)
+                assert.eq(it.kind, item-kind)
+                let number = counter(figure.where(kind: item-kind)).at(it.location()).first()
+                grid(
+                  columns: 2,
+                  gutter: margin + 0.5em,
+                  box(
+                    width: 1em,
+                    outset: (x: margin, y: min-spacing / 2),
+                    stroke: 1pt,
+                    align(center + horizon, numbering(it.numbering, number)),
+                  ),
+                  {
+                    text(fill: item-color, abbreviate(it.caption.supplement))
+                    [ ]
+                    it.caption.body
+                  }
+                )
+              },
+            ))
+
+          // Display the miniatures & background colors.
+          layout(available => {
+            let miniature-height(miniature) = {
+              measure(miniature, width: available.width).height + min-spacing
+            }
+
+            // The sum of the heights of the remaining miniatures to place.
+            let pending-height = miniatures
+              .map(((_, miniature)) => miniature-height(miniature))
+              .sum(default: 0pt) - min-spacing / 2
+            // The position of the bottom edge of the previous miniature.
+            let previous-end-y = margin
+            let y-positions = (none,) * column.len()
+
+            let backgrounds = ()
+            let elements = ()
+
+            if pending-citation != none {
+              backgrounds.push((0pt, pending-citation))
+            }
+
+            for ((reference-y, miniature), citation) in miniatures.zip(citations, exact: true) {
+              // Where the miniature would be with no additional constraint.
+              let ideal-y = available.height * (reference-y / column-height)
+              // Display the miniature a little higher if necessary to ensure
+              // all further miniatures fit within the available space.
+              let preventive-y = calc.min(ideal-y, available.height - pending-height)
+              // This is almost `calc.max(preventive-y, previous-end-y)` but we
+              // add a slight "snapping" behavior so that items that are very
+              // close to each other are displayed stuck together instead of
+              // awkwardly close.
+              let y = if preventive-y - previous-end-y < 2pt {
+                previous-end-y
+              } else {
+                preventive-y
+              }
+
+              if citation != none {
+                backgrounds.push((y, citation))
+              }
+              elements.push((y, miniature))
+
+              let height = miniature-height(miniature)
+              previous-end-y = y + height
+              pending-height -= height
+            }
+
+            for i in range(backgrounds.len()) {
+              let (start-y, citation) = backgrounds.at(i)
+              let end-y = if i + 1 < backgrounds.len() {
+                backgrounds.at(i + 1).first() - min-spacing / 2
+              } else {
+                available.height
+              }
+              place(
+                dy: start-y,
+                rect(
+                  fill: citation-color(citation.key).transparentize(80%),
+                  width: 100%,
+                  outset: (x: margin, top: min-spacing / 2),
+                  height: end-y - start-y,
+                ),
+              )
+            }
+
+            for (y, miniature) in elements {
+              place(dy: y, miniature)
+            }
+          })
+        }),
+    )
+  }
 }
 
 // Graph
