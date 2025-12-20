@@ -3,14 +3,15 @@
 
 #let item-kind = "agregyst:item"
 
-///// COLORS
-#let heading-1-color = red.darken(10%)
-#let heading-2-color = green.darken(20%)
-#let heading-3-color = purple.darken(20%)
-#let item-color = blue
-#let dev-accent-color = purple
+#let colors = (
+  h1: red.darken(10%),
+  h2: green.darken(20%),
+  h3: purple.darken(20%),
+  item: blue,
+  dev: purple,
+)
 
-#let color-box(color: dev-accent-color, name: [DEV], body) = {
+#let color-box(color: colors.dev, name: [DEV], body) = {
   let stroke = 1pt + color
   let name = text(fill: color, size: 8.5pt, weight: "bold", name)
   let outset = 4pt
@@ -139,13 +140,13 @@
   show heading: underline
 
   show heading.where(level: 1): set heading(numbering: n => numbering("I.", n))
-  show heading.where(level: 1): set text(size: 0.77em, fill: heading-1-color)
+  show heading.where(level: 1): set text(size: 0.77em, fill: colors.h1)
 
   show heading.where(level: 2): set heading(numbering: (.., n) => numbering("A.", n))
-  show heading.where(level: 2): set text(size: 0.75em, fill: heading-2-color)
+  show heading.where(level: 2): set text(size: 0.75em, fill: colors.h2)
 
   show heading.where(level: 3): set heading(numbering: (.., n) => numbering("1.", n))
-  show heading.where(level: 3): set text(size: 0.8em, fill: heading-3-color)
+  show heading.where(level: 3): set text(size: 0.8em, fill: colors.h3)
 
   show strong: set text(bold-size)
 
@@ -162,7 +163,7 @@
   show figure.where(kind: item-kind): set block(breakable: true)
   show figure.where(kind: item-kind): it => {
     underline({
-      set text(fill: item-color, size: bold-size, weight: "bold")
+      set text(fill: colors.item, size: bold-size, weight: "bold")
       it.caption.supplement
       sym.space.nobreak
       it.caption.counter.display()
@@ -464,8 +465,8 @@
                 }
               } else if it.func() == heading {
                 show: underline
-                set text(size: 1.1em, fill: heading-1-color) if it.level == 1
-                set text(size: 0.9em, fill: heading-2-color) if it.level == 2
+                set text(size: 1.1em, fill: colors.h1) if it.level == 1
+                set text(size: 0.9em, fill: colors.h2) if it.level == 2
                 if it.numbering != none {
                   numbering(it.numbering, ..counter(heading).at(it.location()))
                   [ ]
@@ -485,7 +486,7 @@
                     align(center + horizon, numbering(it.numbering, number)),
                   ),
                   {
-                    text(fill: item-color, abbreviate(it.caption.supplement))
+                    text(fill: colors.item, abbreviate(it.caption.supplement))
                     [ ]
                     it.caption.body
                   }
