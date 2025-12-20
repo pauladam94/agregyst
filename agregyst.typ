@@ -307,31 +307,6 @@
   }
 }
 
-#let without-refs(it) = {
-  let seq = [].func()
-  let styled = {
-    show strong : it => ""
-    strong[Hey]
-  }.func()
-  if it.func() == seq {
-    seq(it.children.map(without-refs))
-  } else if it.func() == heading {
-    let fields = it.fields()
-    let body_it = fields.remove("body")
-    heading(..fields, without-refs(body_it))
-  } else if it.func() == underline {
-    underline(without-refs(it.body))
-  } else if it.func() == styled {
-    without-refs(it.child)
-  } else if it.func() == block {
-    without-refs(it.body)
-  } else if it.func() == ref {
-    format-citation(it.target, supplement: if "supplement" in it.fields() { it.supplement })
-  } else {
-    it
-  }
-}
-
 #let recap() = {
   set text(size: 9pt, weight: "bold", hyphenate: true)
   set par(leading: 0.3em, justify: false)
@@ -566,33 +541,4 @@
         }),
     )
   }
-}
-
-// Graph
-#let graph(g) = canvas(length: 1em, {
-    import draw: *
-    let r = g.radius
-    let links = g.links
-    let nodes = g.nodes
-    for node in nodes {
-      circle(node.at(1), radius: r, name: node.at(0))
-      content(node.at(0), [#node.at(0)])
-    }
-    for link in links {
-      if (link.at(0) == "bezier") {
-        set-style(mark: (end: ">"))
-        bezier(
-          (link.at(1), r, link.at(2)),
-          (link.at(2), r, link.at(1)),
-          link.at(3)
-        )
-      } else {
-        set-style(mark: (end: ">"))
-        line(..link)
-      }
-    }
-})
-
-#let authors(c) = {
-  align(bottom + center, c)
 }
