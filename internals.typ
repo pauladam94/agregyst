@@ -119,9 +119,12 @@
     font: "New Computer Modern",
     size: 14pt,
     number-width: "proportional",
+    hyphenate: true,
   )
   show math.equation: set text(weight: "regular")
   show raw: set text(font: "New Computer Modern Mono")
+
+  show selector.or(title, heading): set par(justify: false)
 
   show title: set text(size: 0.65em)
   show title: set block(spacing: 0.9em)
