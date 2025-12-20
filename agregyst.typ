@@ -126,7 +126,6 @@
   set text(
     font: "New Computer Modern",
     size: 14pt,
-    lang: "fr",
     number-width: "proportional",
   )
   show math.equation: set text(weight: "regular")
