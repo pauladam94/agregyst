@@ -10,52 +10,52 @@
 #let item-color = blue
 #let dev-accent-color = purple
 
-#let a4h = 595
-#let a4w = 842
-
-#let color-box(c, color: dev-accent-color, title: [DEV]) = context {
-  let stroke_width = 1pt
-  let stroke_box = color + stroke_width
-  let title = text(color, 10pt, align(center + horizon,
-    [*#title*]
-  ))
-  let inset = 0pt
+#let color-box(color: dev-accent-color, name: [DEV], body) = {
+  let stroke = 1pt + color
+  let name = text(fill: color, size: 8.5pt, weight: "bold", name)
   let outset = 4pt
 
-  let (width: titlew, height: titleh) = measure(title)
-  titlew += 0.6em
-  titleh += 0.3em
-
-  let all = block(
-    breakable: true,
-    stroke: stroke_box,
-    radius: 0pt,
-    inset: inset,
-    outset: outset,
+  show: block.with(
     width: 100%,
-    c
+    breakable: true,
+    stroke: stroke,
+    outset: outset,
   )
 
-  let dec = -0.5pt
-  let offset = -0em
-  let on-the-left = here().position().x.pt() <= a4h / 2
-  block(breakable: true)[
-  #place(
-    dy: if on-the-left {- titleh + titlew - outset + dec}
-        else {-titleh -outset + dec},
-    dx: if on-the-left { 100% - titlew + outset + dec + offset }
-        else {-titlew - outset - dec},
-    rotate(if on-the-left {90deg} else { -90deg }, box(
-      stroke: stroke_width + color,
-      width: titlew,
-      height: titleh,
-      outset: dec,
-      radius: 0pt,
-      title
-    ), origin: right + bottom)
-  )
-  #all
-  ]
+  context {
+    let (page-width, page-height) = if page.flipped {
+      (page.height, page.width)
+    } else {
+      (page.width, page.height)
+    }
+    let is-left-column = here().position().x < page-width / 2
+
+    let it = box(
+      inset: (x: 0.3em, y: 0.15em),
+      stroke: stroke,
+      name,
+    )
+
+    show: place.with(
+      dx: if is-left-column {
+        100% + outset
+      } else {
+        -outset - measure(it).height
+      },
+      dy: -outset,
+    )
+    show: rotate.with(
+      if is-left-column {
+        90deg
+      } else {
+        -90deg
+      },
+      reflow: true,
+    )
+    it
+  }
+
+  body
 }
 
 ///// DEV
