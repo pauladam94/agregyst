@@ -1,40 +1,42 @@
-#import "@preview/agregyst:0.1.0" : tableau, dev, recap, item
-#show : tableau
+#import "@preview/agregyst:1.0.0" : tableau, dev, recap, item
 
-= Title of the lesson
+#set text(lang: "fr")
+#set document(title: [Titre de la leçon])
+#show: tableau
 
-#pagebreak()
-== First Part
 
-// This item does not have a source
-// is will be show gray in the recap
-// @NAN
-#item("Définition")[A Graph][
-    is ...
+#title()
+
+
+= Première partie
+
+== Première sous-partie @TOR
+
+#item("Définition")[Un mot][
+  est...
 ]
 
-// @NAN
-#item("Définition")[A Graph][
-    is ...
+#item("Theorème")[Lemme de l'étoile.][
+  Soit $u$ un mot...
 ]
 
-#pagebreak()
+// Sous-partie sans référence particulière.
+== Deuxième sous-partie @NAN
 
-// This part has the SIP reference
-// it will have a special color in the recap
-// @SIP
-== Second Part 
+#dev[
+  #item("Exemple")[Le langage de Dyck][
+    est...
+  ]
+]
 
-#pagebreak()
-// @NAN
-== Third Part 
+
+= Deuxième partie
+
+...
+
 
 #recap()
 
-// #bibliography(read("bib.yaml", encoding: none))
-
-===== Remark
-
-#align(center + bottom)[
-    fst author & snd author
-]
+// Impossible de spécifier le chemin directement dans la fonction `bibliography`
+// pour des raisons techniques.
+#bibliography(read("bib.yaml", encoding: none))

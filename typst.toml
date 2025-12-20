@@ -1,15 +1,15 @@
 [package]
 name = "agregyst"
-version = "0.1.0"
+version = "1.0.0"
 entrypoint = "lib.typ"
-authors = ["Paul Adam <@pauladam94>"]
+authors = ["Paul Adam <@pauladam94>", "Malo <@MDLC01>"]
 license = "MIT"
-description = "Agregation Template for writting teaching lesson"
+description = "Two-column agrégation lesson with summary at the end."
 repository = "https://github.com/pauladam94/agregyst"
-keywords = ["lesson", "teaching", "agreg", "agregation"]
+keywords = ["lesson", "teaching", "agreg", "agregation", "agrégation"]
 categories = ["utility", "report"]
 disciplines = ["computer-science", "mathematics"]
-compiler = "0.13.1"
+compiler = "0.14.0"
 
 [template]
 path = "template"
