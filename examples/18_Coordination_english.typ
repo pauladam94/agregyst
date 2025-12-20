@@ -1,4 +1,4 @@
-#import "../agregyst.typ" : tableau, dev, recap, item
+#import "../lib.typ" : tableau, dev, recap, item
 
 #set document(title: [Management and Coordination of multiple execution thread @MOS])
 #show : tableau
@@ -308,7 +308,7 @@ event.process()
 
 #recap()
 
-==== Au programme
+= Au programme
 
 - Prepa :
   - Notions de processus

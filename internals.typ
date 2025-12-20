@@ -1,6 +1,3 @@
-#import calc: *
-#import "utils.typ": *
-
 #let item-kind = "agregyst:item"
 
 #let colors = (
@@ -59,14 +56,12 @@
   body
 }
 
-///// DEV
 #let dev(c) = color-box(c)
 #let warning(c) = color-box(c,
   color: orange,
   title: emoji.warning
 )
 
-///// ITEM
 #let item(type, name, c) = {
   figure(
     placement: none,
@@ -81,10 +76,11 @@
 #let citation-color(key) = {
   if key == <NAN> {
     gray
-  } else if str(key) in colors-default {
-    colors-default.at(str(key))
   } else {
-    color-from-string(str(key), h: 80%, s: 80%, v: 100%)
+    import "@preview/jumble:0.0.1" : sha1
+    let hash = array(sha1(str(key)))
+    let value = hash.at(0).bit-lshift(8).bit-or(hash.at(1)).bit-lshift(8).bit-or(hash.at(2)) / (1.bit-lshift(8 * 3) - 1)
+    color.hsv(360deg * value, 80%, 80%, 100%)
   }
 }
 
@@ -97,10 +93,6 @@
   }
   [\]]
 }
-
-///// TABLEAU
-
-#let bold-size = 0.85em
 
 #let tableau(body) = {
   set page(
@@ -147,6 +139,7 @@
   show heading.where(level: 3): set heading(numbering: (.., n) => numbering("1.", n))
   show heading.where(level: 3): set text(size: 0.8em, fill: colors.h3)
 
+  let bold-size = 0.85em
   show strong: set text(bold-size)
 
   show link: it => underline(stroke: black, it)

@@ -1,7 +1,7 @@
 [package]
 name = "agregyst"
 version = "0.1.0"
-entrypoint = "agregyst.typ"
+entrypoint = "lib.typ"
 authors = ["Paul Adam <@pauladam94>"]
 license = "MIT"
 description = "Agregation Template for writting teaching lesson"
