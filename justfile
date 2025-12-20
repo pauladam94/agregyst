@@ -1,6 +1,6 @@
 thumbnail:
-	typst c examples/18_Coordination_english.typ --root . -f png "thumbnail/lecon_18_{p}.png"
-	typst c thumbnail/thumbnail.typ -f png --pages 1 --ppi 200
+	typst c examples/coordination.typ --root . -f png 'coordination-{p}.png'
+	typst c thumbnail/thumbnail.typ --root . -f png --pages 1 --ppi 200
 	oxipng thumbnail/thumbnail.png
 
 # DIR should be equal to the directory where the package will reside
@@ -12,7 +12,7 @@ copy_to DIR:
 	cp typst.toml {{DIR}}/typst.toml
 	cp README.md {{DIR}}/README.md
 	cp LICENSE {{DIR}}/LICENSE
-	
+
 	rm -f {{DIR}}/template/bib.yaml
 	rm -f {{DIR}}/template/main.typ
 	rmdir {{DIR}}/template
@@ -20,4 +20,3 @@ copy_to DIR:
 	mkdir {{DIR}}/template
 	cp template/bib.yaml {{DIR}}/template/bib.yaml
 	cp template/main.typ {{DIR}}/template/main.typ
-

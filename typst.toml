@@ -10,6 +10,7 @@ keywords = ["lesson", "teaching", "agreg", "agregation", "agrégation"]
 categories = ["utility", "report"]
 disciplines = ["computer-science", "mathematics"]
 compiler = "0.14.0"
+exclude = ["examples/"]
 
 [template]
 path = "template"
