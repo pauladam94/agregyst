@@ -62,13 +62,13 @@
   title: emoji.warning
 )
 
-#let item(type, name, c) = {
+#let item(type, name, c, numbering: "1") = {
   figure(
     placement: none,
     caption: name,
     kind: item-kind,
     supplement: type,
-    numbering: "1",
+    numbering: numbering,
     c,
   )
 }
@@ -161,10 +161,11 @@
       set text(fill: colors.item, size: bold-size, weight: "bold")
       it.caption.supplement
       sym.space.nobreak
-      it.caption.counter.display()
+      numbering(it.numbering, ..it.caption.counter.get())
     })
     [ ]
     text(size: bold-size, weight: "bold", it.caption.body)
+    [ ]
     it.body
   }
 
