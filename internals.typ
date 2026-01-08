@@ -396,6 +396,31 @@
 
     let margin = 4pt
     let min-spacing = 5pt
+
+    let item-number(item, width: auto) = {
+      let number = counter(figure.where(kind: item-kind)).at(item.location())
+      show: box.with(
+        width: width,
+        outset: (x: margin, y: min-spacing / 2),
+        stroke: 1pt,
+      )
+      set align(center + horizon)
+      numbering(item.numbering, ..number)
+    }
+
+    let item-number-width = calc.max(
+      0pt,
+      ..columns
+        .join()
+        .map(it => {
+          if it.func() == figure and it.kind == item-kind {
+            measure(item-number(it)).width
+          } else {
+            0pt
+          }
+        })
+    )
+
     grid(
       columns: (1fr,) * column-per-page,
       rows: (1fr,) * page-count,
@@ -446,16 +471,10 @@
               } else {
                 assert.eq(it.func(), figure)
                 assert.eq(it.kind, item-kind)
-                let number = counter(figure.where(kind: item-kind)).at(it.location()).first()
                 grid(
                   columns: 2,
                   gutter: margin + 0.5em,
-                  box(
-                    width: 1em,
-                    outset: (x: margin, y: min-spacing / 2),
-                    stroke: 1pt,
-                    align(center + horizon, numbering(it.numbering, number)),
-                  ),
+                  item-number(it, width: item-number-width),
                   {
                     text(fill: colors.item, abbreviate(it.caption.supplement))
                     [ ]
