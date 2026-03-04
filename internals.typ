@@ -304,10 +304,10 @@
 }
 
 #let recap() = {
+  colbreak(weak: true)
+  show: block.with(width: 100%, height: 100%, breakable: false)
   set text(size: 9pt, weight: "bold", hyphenate: true)
   set par(leading: 0.3em, justify: false)
-
-  show: block.with(width: 100%, height: 100%, breakable: false)
 
   context {
     let recaped = selector.or(
