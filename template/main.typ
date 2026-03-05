@@ -1,4 +1,4 @@
-#import "@preview/agregyst:1.1.0" : tableau, dev, recap, item
+#import "@preview/agregyst:1.1.1" : tableau, dev, recap, item
 
 #set text(lang: "fr")
 #set document(title: [Titre de la leçon])
