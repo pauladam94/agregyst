@@ -89,7 +89,7 @@
   [\[]
   str(key)
   if supplement != none {
-    [ #supplement]
+    [, #supplement]
   }
   [\]]
 }
