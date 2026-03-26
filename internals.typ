@@ -200,8 +200,10 @@
       if parts.len() == 1 {
         return parts.first()
       }
-      let (last-name, first-name) = parts
-      [#first-name.clusters().first().~#last-name]
+      let (last-name, first-names) = parts
+      first-names.split().map(name => [#name.clusters().first().]).join[~]
+      [~]
+      last-name
     }
 
     let display-entry(key) = {
