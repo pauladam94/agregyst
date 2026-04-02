@@ -218,7 +218,7 @@
       [ ]
       format-citation(key)
       sym.space.nobreak
-      authors.map(short-author).join(last: [ & ])[, ]
+      authors.map(short-author).join[, ]
       [, ]
       text(style: "italic", book.title)
       [.]
