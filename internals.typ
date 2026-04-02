@@ -271,9 +271,9 @@
   } else if s.contains(regex("(?i)^prop(osition|riété|erty)$")) {
     [Prop]
   } else if s.contains(regex("(?i)^comp(lexité|lexity)$")) {
-    [Complex]
+    [Compl]
   } else if s.contains(regex("(?i)^notation$")) {
-    [Not]
+    [Notat]
   } else if s.contains(regex("(?i)^méthode$")) {
     [Métho]
   } else if s.contains(regex("(?i)^impl(é|e)mentation$")) {
@@ -294,12 +294,14 @@
     [Exo]
   } else if s.contains(regex("(?i)^example$")) {
     [Eg]
-  } else if s.contains(regex("(?i)^exercice$")) {
+  } else if s.contains(regex("(?i)^exercise$")) {
     [Ex]
   } else if s.contains(regex("(?i)^motivation$")) {
     [Motiv]
   } else if s.contains(regex("(?i)^repr(é|e)sentation$")) {
     [Repr]
+  } else if s.contains(regex("(?i)^principe$")) {
+    [Princ]
   } else {
     name
   }
