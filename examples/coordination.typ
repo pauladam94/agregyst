@@ -20,23 +20,23 @@
 / Goals: Understand how multithreading and multiprocess applications are build and how they work on top of the operating system.
 
 = Process @MOS[2.1.1]
-#item("Definition")[A process][
-  is an instance of an executing program, including the current values of the program counter, registers, and variables. It also has an address space an thread of execution associated to it.
+#item("Definition")[
+  A _process_ is an instance of an executing program, including the current values of the program counter, registers, and variables. It also has an address space an thread of execution associated to it.
 ]
 
-#item("Definition")[The memory of a process][
-  is divided into four parts :
+#item("Definition")[
+  The _memory of a process_ is divided into four parts :
   - the *data* segment that stores global variable
   - the *text* segment for the code of the program
   - the *stack* which is used for static allocation (like local variable)
   - the *heap* where dynamic allocated memory lives.
 ]
 
-#item("Definition")[Multiprogramming.][
-  If multiple processes are present on an operating system the OS can switch back and forth from one to an other for execution. This is called multiprogramming.
+#item("Definition")[
+  If multiple processes are present on an operating system the OS can switch back and forth from one to an other for execution. This is called _multiprogramming_.
 ]
 
-#item("Example")[][
+#item("Example")[
   Multiprogramming four programs.
   Conceptual model of four independant processes.
   Only one program is active at once.
@@ -45,33 +45,34 @@
 
 
 
-#item("Definition")[A daemon][
-  is a process that works continuously in the background. Email, Web spages, printing are examples of daemons. It is not directly used by the user.
+#item("Definition")[
+  A _daemon_ is a process that works continuously in the background. Email, Web spages, printing are examples of daemons. It is not directly used by the user.
 ]
 
-#item("Remark")[The Process Table][
-  is where OS keep track of important information about the processes states. It is divided in process, memory and file management. Those contains information like the User ID, the registers or a pointer to the data segment.
+#item("Remark")[
+  The _Process Table_ is where OS keep track of important information about the processes states. It is divided in process, memory and file management. Those contains information like the User ID, the registers or a pointer to the data segment.
 ]
 
-#item("Remark")[Context Switch.][
-  To manage different processes the OS have to operate *context switch* to execute one process at a time (on a given cpu core). This is costly and should be done on moment where a process is waiting for IO or a web request for example.
+#item("Remark")[
+  To manage different processes the OS have to operate _context switch_ to execute one process at a time (on a given cpu core). This is costly and should be done on moment where a process is waiting for IO or a web request for example.
 ]
 
-#item("Property")[IPC.][
-  Processes can communicate with each other using the pipe operator, direct memory mapping, signals.
+#item("Property")[
+  *IPC.* Processes can communicate with each other using the pipe operator, direct memory mapping, signals.
 ]
 
 = Thread @MOS[2.2.2]
-#let thread_definition = item("Definition")[A thread][
-  (also called light weight process) is a way to parallelized execution while keeping the same context and so the same address space.
+#let thread_definition = item("Definition")[
+  A _thread_ (also called _lightweight process_) is a way to parallelized execution while keeping the same context and so the same address space.
 ]
 
-#let three_thread_ex = item("Example")[A word processor with three thread][
+#let three_thread_ex = item("Example")[
+  *A word processor with three thread.*
   #align(center, image("word_processor_thread.png", width: 200pt))
 ]
 
-#let thread_stack = item("Remark")[Thread Stack][
-  is not shared and so is allocated separately for each new thread created by a process.
+#let thread_stack = item("Remark")[
+  _Thread stack_ is not shared and so is allocated separately for each new thread created by a process.
 ]
 
 #grid(columns : (45%, 50%), column-gutter: 1em,
@@ -82,21 +83,21 @@
   three_thread_ex
 )
 
-#item("Implementation")[POSIX API][
-  is a set of function that aims to make more portable software. It defines some function for thread management that are supported by most UNIX system.
+#item("Implementation")[
+  The _POSIX API_ is a set of function that aims to make more portable software. It defines some function for thread management that are supported by most UNIX system.
   #align(center, image("posix_thread_api.png", width: 80%))
 ]
 
-#let kernel_space_thread = item("Implementation")[Kernel space thread.][
-  Threads can be implemented at the kernel level where they can achieve real parallelisation. Its the OS that manage the scheduling.
+#let kernel_space_thread = item("Implementation")[
+  Threads can be implemented at the kernel level (_kernel space thread_) where they can achieve real parallelisation. Its the OS that manage the scheduling.
 ]
 
-#let user_space_thread = item("Implementation")[User space thread][
-  only do *interleaving* but can be much lighter and adaptable. Only on thread at a time can actually execute.
+#let user_space_thread = item("Implementation")[
+  _User space thread_ only do _interleaving_ but can be much lighter and adaptable. Only on thread at a time can actually execute.
 ]
 
-#let hybrid_implem_remark = item("Remark")[Hybrid implemen-tation][
-   exist and potentially offer the best of both worlds. They are usually not used because of their complexity.
+#let hybrid_implem_remark = item("Remark")[
+   _Hybrid implementations_ exist and potentially offer the best of both worlds. They are usually not used because of their complexity.
 ]
 
 #let user_kernel_image = align(center, image("user_kernel_thread.png", width: 110%))
@@ -113,24 +114,24 @@ stack(dir: ttb, spacing: 0.5em,
 )
 
 #dev[
-#item("Thread")[@COR3[27.3] Multithreaded Merge Sort.][
-  Divide and conquer algorithm are typically algorithm that can be multithreaded. Each recursive call can be a new thread but this is a pretty naïve approach.
+#item("Thread")[
+  @COR3[27.3] *Multithreaded Merge Sort.* Divide and conquer algorithm are typically algorithm that can be multithreaded. Each recursive call can be a new thread but this is a pretty naïve approach.
 ]
 ]
 
 = Synchronisation @MOS[2.4]
 == Initial problem
 
-#item("Problem")[Race Condition.][
-  When asking for the same ressource all of the means for communicating between threads and processus can produce race condition.
+#item("Problem")[
+  When asking for the same ressource all of the means for communicating between threads and processus can produce _race conditions_.
 ]
 
-#item("Remark")[][
+#item("Remark")[
   Multithreaded code execution is non deterministic and depends on the OS scheduling. So race condition error are complicated to debug because they do not appear in every run of the program.
 ]
 
-#item("Example")[Counter example.][
-  This example never crash but does not output always the same result. The expected behavior is for the program to return `20 000`.
+#item("Example")[
+  *Counter example.* This example never crash but does not output always the same result. The expected behavior is for the program to return `20 000`.
 ```C
 int cpt = 0;
 void* incr(void*) {
@@ -145,18 +146,18 @@ int main() { pthread_t thread0, thread1;
 ```
 ]
 
-#item("Definition")[Critical Section][
-  is where threads interacts with shared memory.
+#item("Definition")[
+  A _critical section_ is where threads interacts with shared memory.
 ]
 
-#item("Definition")[Mutual exclusion][
-  is when not two thread are in critical section together.
+#item("Definition")[
+  _Mutual exclusion_ is when not two thread are in a critical section together.
 ]
 
 == Algorithmic Solution
 
-#item("Algorithm")[Peterson Algorithm][
-  achieve mutual exclusion.
+#item("Algorithm")[
+  _Peterson's algorithm_ achieves mutual exclusion.
 ```C
 #define N 2
 int turn;
@@ -173,64 +174,64 @@ void enter_region(int process) {
 ```
 ]
 
-#item("Property")[][
+#item("Property")[
   This algorithm does work and prevent 2 thread from race condition. However it uses busy waiting which uses CPU time continuously.
 ]
 
-#item("Remark")[In pratice][
-  this approach does not work. With modern hardware reodering of instruction made by the compiler and CPU can break this algorithm. Fences is the way to prevent but are much more complicated to use and hardware dependent.
+#item("Remark", summary: [in practice])[
+  In pratice this approach does not work. With modern hardware reodering of instruction made by the compiler and CPU can break this algorithm. Fences is the way to prevent but are much more complicated to use and hardware dependent.
 ]
 
 == Hardware Solution @MOS[2.4.4]
 
-#item("Definition")[Atomic operations][
-  is any program code that indivisible in the sense that the CPU *must* execute it all in one go.
+#item("Definition")[
+  An _atomic operation_ is any program code that indivisible in the sense that the CPU *must* execute it all in one go.
 ]
 
-#item("Definition")[Test and Set lock][
-  is a hardware primitive. There are hardware instruction that execute in an atomic way.
+#item("Definition")[
+  _Test and Set lock_ is a hardware primitive. There are hardware instruction that execute in an atomic way.
 ]
 
-#item("Synchronization")[Semaphore][
-  is a concept introduce by Dijstra in 1965. Two operations are available _P_ and _V_ on a semaphore _m_ initialized to 0.
-  - _V(m)_ increase the value of _m_ by 1.
-  - _P(m)_ blocks if _m_ equals 0 and decrease _m_ otherwise.
+#item("Synchronization")[
+  _Semaphores_ are a concept introduce by Dijstra in 1965. Two operations are available $P$ and $V$ on a semaphore $m$ initialized to $0$.
+  - $V(m)$ increases the value of $m$ by $1$.
+  - $P(m)$ blocks if $m = 0$ and decreases $m$ otherwise.
 ]
 
-#item("Example")[][
+#item("Example")[
   For mutual exclusion we usually initialize semaphores to 0 :
 ```C
 s0, s1 = sema(0), sema(0)
 ```
 ]
 
-#item("Remark")[Passive Waiting.][
-  _P_ can block the current thread. However this lock is passive, so the OS can schedule an other thread during that wait : no CPU is wasted.
+#item("Remark")[
+  $P$ can block the current thread. However this lock is _passive_, so the OS can schedule an other thread during that wait : no CPU is wasted.
 ]
 
-#item("Application")[][
+#item("Application")[
   Semaphore function can be created using `test and lock` primitive an simple integer.
 ]
 
-#item("Definition")[Mutex][
-  is a special type of binary semaphore. They can only be locked or unlocked.
+#item("Definition")[
+  A _mutex_ is a special type of binary semaphore. They can only be locked or unlocked.
 ]
 
 #dev[
-  #item("Definition")[A Thread safe structure][
-    is a structure when any function of the structure are using mutual exclusion. It is achieved using mutex, however this isn't always enough.
+  #item("Definition")[
+    A _thread safe structure_ is a structure when any function of the structure are using mutual exclusion. It is achieved using mutex, however this isn't always enough.
   ]
 ]
 
 == DeadLocks
 
-#item("Problem")[DeadLock.][
-  If two thread are locking the same mutexes in different order, they could be waiting forever in some cases. It is named a *DeadLock*.
+#item("Problem")[
+  If two thread are locking the same mutexes in different order, they could be waiting forever in some cases. It is named a _deadlock_.
 ]
 
 
-#item("Example")[Example of a Deadlock][
-
+#item("Example")[
+*Example of a deadlock.*
 #grid(columns: (50%, 50%),
 ```C
 P(s0)
@@ -245,19 +246,20 @@ P(s0) // possibly blocked
 )
 ]
 
-#item("Theorem")[][
+#item("Theorem")[
   If all threads lock always in the same order the semaphores then deadlocks are impossible.
 ]
 
 == Synchronization pattern
 
 #dev[
-#item("Exemple")[@SEMA Philosophes Diner.][
-   Some philosophes are around a table. They wish to et together. However the cutlery is shared between them. The left knife of a philosophers with the right one of his neighbour. How can they manage to all eat as fast as possible with so few knives ?
-]
+  #item("Exemple")[
+    @SEMA *Philosophers diner.* Some philosophes are around a table. They wish to et together. However the cutlery is shared between them. The left knife of a philosophers with the right one of his neighbour. How can they manage to all eat as fast as possible with so few knives ?
+  ]
 ]
 
-#item("Definition")[@SEMA Meeting between Threads.][
+#item("Definition")[
+  @SEMA *Meeting between Threads.*
   Sometimes we want to make sure that two threads pass some point together in the code.
 #grid(columns : (1fr, 1fr),
 ```C
@@ -271,11 +273,12 @@ P(s0) // has to wait V(s0)
 )
 ]
 
-#item("Remark")[][
+#item("Remark")[
   Using mutex with the POSIX API, we can wait for a thread to finish by using the `pthread_join` function. Usually one thread is in charged of terminating all of the threads, this main thread is the one doing the `pthread_join` call.
 ]
 
-#item("Definition")[@SEMA Producter Consumer.][
+#item("Definition")[
+  @SEMA *Producer-consumer.*
   We suppose that all semaphores are initialized to 0.
 #grid(columns : (1fr, 1fr),
 [
@@ -301,8 +304,8 @@ event.process()
 )
 ]
 
-#item("Remark")[Equality and Fairness.][
-  Here we only try to avoid deadlock however other criteria can be interesting. Even if no thread ever deadlock, does every thread has it's equal time of CPU to do what is has to do ?
+#item("Remark")[
+  *Equality and Fairness.* Here we only try to avoid deadlock however other criteria can be interesting. Even if no thread ever deadlock, does every thread has it's equal time of CPU to do what is has to do ?
 ]
 
 

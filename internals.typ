@@ -62,14 +62,19 @@
   title: emoji.warning
 )
 
-#let item(type, name, c, numbering: "1") = {
+#let item(type, summary: auto, body, numbering: "1") = {
   figure(
     placement: none,
-    caption: name,
+    caption:
+      if summary == auto {
+        metadata(auto)
+      } else {
+        summary
+      },
     kind: item-kind,
     supplement: type,
     numbering: numbering,
-    c,
+    body,
   )
 }
 
@@ -163,8 +168,6 @@
       sym.space.nobreak
       numbering(it.numbering, ..it.caption.counter.get())
     })
-    [ ]
-    text(size: bold-size, weight: "bold", it.caption.body)
     [ ]
     it.body
   }
@@ -339,6 +342,30 @@
       column-per-page * (pos.page - 1) + column-in-page
     }
 
+    // Modifies a selector to make it target only within a recaped element.
+    //
+    // For headings, this targets the whole section. For items, this targets
+    // everything until the next heading or item.
+    let within(sel, elt) = {
+      let before = (here(),)
+      if elt.func() == title {
+        // No limit.
+      } else if elt.func() == heading {
+        for i in range(1, elt.level + 1) {
+          before.push(heading.where(level: i))
+        }
+      } else {
+        before.push(heading)
+        before.push(figure.where(kind: item-kind))
+      }
+      sel
+        .after(elt.location())
+        .before(
+          selector.or(..before).after(elt.location(), inclusive: false),
+          inclusive: false,
+        )
+    }
+
     // Build the list notable elements for each of the six columns.
     let column-elements = ((),) * column-count
     for it in query(recaped.before(here(), inclusive: false)) {
@@ -487,7 +514,14 @@
                   {
                     text(fill: colors.item, abbreviate(it.caption.supplement))
                     [ ]
-                    it.caption.body
+                    if it.caption.body.func() == metadata and it.caption.body.value == auto {
+                      let topic = query(within(selector.or(emph, strong), it)).first(default: none)
+                      if topic != none {
+                        topic.body
+                      }
+                    } else {
+                      it.caption.body
+                    }
                   }
                 )
               },
