@@ -398,8 +398,13 @@
       }
     })
 
+    // The horizontal margin for each column.
+    // Also used as the horizontal margin around the item numbers.
     let margin = 4pt
-    let min-spacing = 5pt
+    // The spacing between item numbers and item descriptions.
+    let spacing = 0.5em
+    // The spacing between miniatures.
+    let min-spacing = 6pt
 
     let item-number(item, width: auto) = {
       let number = counter(figure.where(kind: item-kind)).at(item.location())
@@ -477,7 +482,7 @@
                 assert.eq(it.kind, item-kind)
                 grid(
                   columns: 2,
-                  gutter: margin + 0.5em,
+                  gutter: margin + spacing,
                   item-number(it, width: item-number-width),
                   {
                     text(fill: colors.item, abbreviate(it.caption.supplement))
@@ -499,7 +504,7 @@
               .map(((_, miniature)) => miniature-height(miniature))
               .sum(default: 0pt) - min-spacing / 2
             // The position of the bottom edge of the previous miniature.
-            let previous-end-y = margin
+            let previous-end-y = min-spacing / 2
             let y-positions = (none,) * column.len()
 
             let backgrounds = ()
@@ -519,7 +524,7 @@
               // add a slight "snapping" behavior so that items that are very
               // close to each other are displayed stuck together instead of
               // awkwardly close.
-              let y = if preventive-y - previous-end-y < 2pt {
+              let y = if preventive-y - previous-end-y <= 2pt {
                 previous-end-y
               } else {
                 preventive-y
