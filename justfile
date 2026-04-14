@@ -1,6 +1,6 @@
 thumbnail:
 	typst c examples/coordination.typ --root . -f png 'coordination-{p}.png'
-	typst c thumbnail/thumbnail.typ --root . -f png --pages 1 --ppi 200
+	typst c thumbnail/thumbnail.typ --root . -f png --pages 1 --ppi 125
 	oxipng thumbnail/thumbnail.png
 
 # DIR should be equal to the directory where the package will reside
