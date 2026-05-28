@@ -252,62 +252,27 @@
 }
 
 #let abbreviate(name) = {
-  let s = if type(name) == content and name.func() == text {
-    name.text
-  } else if type(name) == str {
-    name
-  }
-  if s == none {
-    return none
-  }
-  // Precomposed accented letters in regular expressions do not match their
-  // canonical decomposition, so we normalize to NFC first.
-  s = s.normalize()
-  // (?i) is for case insensivitity.
-  // ^ and $ are to match the entire string.
-  // Ideally this would be in a dictionary, but this doesn't work because we
-  // want to be case insensitive
-  if s.contains(regex("(?i)^d(é|e)f(inition)?$")) {
-    [Def]
-  } else if s.contains(regex("(?i)^prob(lème|lem)$")) {
-    [Prob]
-  } else if s.contains(regex("(?i)^prop(osition|riété|erty)$")) {
-    [Prop]
-  } else if s.contains(regex("(?i)^comp(lexité|lexity)$")) {
-    [Compl]
-  } else if s.contains(regex("(?i)^notation$")) {
-    [Notat]
-  } else if s.contains(regex("(?i)^méthode$")) {
-    [Métho]
-  } else if s.contains(regex("(?i)^impl(é|e)mentation$")) {
-    [Implem]
-  } else if s.contains(regex("(?i)^application$")) {
-    [App]
-  } else if s.contains(regex("(?i)^remarque$")) {
-    [Rq]
-  } else if s.contains(regex("(?i)^remark$")) {
-    [Rem]
-  } else if s.contains(regex("(?i)^(théorème|theorem)$")) {
-    [Th]
-  } else if s.contains(regex("(?i)^(algorithme|algorithm)$")) {
-    [Algo]
-  } else if s.contains(regex("(?i)^exemple$")) {
-    [Ex]
-  } else if s.contains(regex("(?i)^exercice$")) {
-    [Exo]
-  } else if s.contains(regex("(?i)^example$")) {
-    [Eg]
-  } else if s.contains(regex("(?i)^exercise$")) {
-    [Ex]
-  } else if s.contains(regex("(?i)^motivation$")) {
-    [Motiv]
-  } else if s.contains(regex("(?i)^repr(é|e)sentation$")) {
-    [Repr]
-  } else if s.contains(regex("(?i)^principe$")) {
-    [Princ]
-  } else {
-    name
-  }
+  // TODO: Support decomposed accented letters as well.
+  show regex("(?i)^d(é|e)f(inition)?$"): [Def]
+  show regex("(?i)^prob(lème|lem)$"): [Prob]
+  show regex("(?i)^prop(osition|riété|erty)$"): [Prop]
+  show regex("(?i)^comp(lexité|lexity)$"): [Compl]
+  show regex("(?i)^notation$"): [Notat]
+  show regex("(?i)^méthode$"): [Métho]
+  show regex("(?i)^impl(é|e)mentation$"): [Implem]
+  show regex("(?i)^application$"): [App]
+  show regex("(?i)^remarque$"): [Rq]
+  show regex("(?i)^remark$"): [Rem]
+  show regex("(?i)^(théorème|theorem)$"): [Th]
+  show regex("(?i)^(algorithme|algorithm)$"): [Algo]
+  show regex("(?i)^exemple$"): [Ex]
+  show regex("(?i)^exercice$"): [Exo]
+  show regex("(?i)^example$"): [Eg]
+  show regex("(?i)^exercise$"): [Ex]
+  show regex("(?i)^motivation$"): [Motiv]
+  show regex("(?i)^repr(é|e)sentation$"): [Repr]
+  show regex("(?i)^principe$"): [Princ]
+  name
 }
 
 #let recap() = {
