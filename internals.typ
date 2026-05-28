@@ -221,6 +221,13 @@
       authors.map(short-author).join[, ]
       [, ]
       text(style: "italic", book.title)
+      if "edition" in book {
+        context if text.lang == "fr" {
+          [ (édition #book.edition)]
+        } else {
+          [ (edition #book.edition)]
+        }
+      }
       [.]
       linebreak()
     }
