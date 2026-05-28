@@ -179,11 +179,8 @@
 
     assert.eq(it.sources.len(), 1, message: "expected exactly one bibliography source")
     if type(it.sources.first()) != bytes {
-      // We use `assert(false)` instead of `panic()` so that the error message
-      // is printed as a string instead of its repr being printed.
-      assert(
-        false,
-        message: "cannot read bibliography from file, try `bibliography(read(\"" + it.sources.first() + "\", encoding: none))`",
+      panic(
+        "cannot read bibliography from file, try `bibliography(read(\"" + it.sources.first() + "\", encoding: none))`",
       )
     }
     let file = yaml(it.sources.first())
