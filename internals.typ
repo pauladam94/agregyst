@@ -438,15 +438,6 @@
             clip: true,
           )
 
-          // Background heading numerals.
-          if background-number != none {
-            show: place
-            show: block.with(width: 100%, height: 100%)
-            set align(center + horizon)
-            set text(size: 140pt, fill: gray.transparentize(70%))
-            background-number
-          }
-
           // Generate miniature versions of titles, headings and items.
           let miniatures = column
             .map(it => (
@@ -492,7 +483,7 @@
               },
             ))
 
-          // Display the miniatures & background colors.
+          // Display the content of a recap grid cell.
           layout(available => {
             let miniature-height(miniature) = {
               measure(miniature, width: available.width).height + min-spacing
@@ -539,6 +530,7 @@
               pending-height -= height
             }
 
+            // Place background colors.
             for i in range(backgrounds.len()) {
               let (start-y, citation) = backgrounds.at(i)
               let end-y = if i + 1 < backgrounds.len() {
@@ -557,6 +549,16 @@
               )
             }
 
+            // Place heading numerals.
+            if background-number != none {
+              show: place
+              show: block.with(width: 100%, height: 100%)
+              set align(center + horizon)
+              set text(size: 140pt, fill: gray.transparentize(70%))
+              background-number
+            }
+
+            // Place miniatures.
             for (y, miniature) in elements {
               place(dy: y, miniature)
             }
